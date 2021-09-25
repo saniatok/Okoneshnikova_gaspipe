@@ -1,97 +1,61 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+
 using namespace std;
 
 struct Pipe
 {
-    int id;
     int diam;
     float length;
     bool in_repair;
 };
 
-bool IsDiamCorrect(int d)
-{
-    return d <= 0;
-}
-
-bool IsLengthCorrect(float l)
-{
-    return l <= 0;
-}
-
-Pipe InputPipe()
+Pipe LoadPipe(ifstream& fin)
 {
     Pipe p;
-    p.id = 0;
-    do
-    {
-        /*cin.clear();
-        cin.ignore(10000, '/n');*/
-        cout << "Enter diameter of pipe: ";
-        cin >> p.diam;
-    } while (/*cin.fail() ||*/ IsDiamCorrect(p.diam));
-    do
-    {
-        /*cin.clear();
-        cin.ignore(1000, '/n');*/
-        cout << "Enter length of pipe: ";
-        cin >> p.length;
-    } while (/*cin.fail() ||*/ IsLengthCorrect(p.length));
-    cout << " " << endl;
-    return p;
-}
-
-Pipe LoadPipe()
-{
-    Pipe p;
-    ifstream fin;
-    fin.open("data.txt", ios::in);
-    if (fin.is_open())
-    {
-        fin >> p.id;
         fin >> p.diam;
         fin >> p.length;
         fin >> p.in_repair;
-        fin.close();
-    }
     return p;
 }
 
-void OutputPipe(const Pipe& p)
+void SavePipe(ofstream& fout, const Pipe& p)
 {
-    cout << "Pipe's id: " << p.id << endl
-        << "Pipe's diameter: " << p.diam << endl
-        << "Pipe's length: " << p.length << endl;
-    if (p.in_repair)
-    {
-        cout << "This pipe isn't in repair. " << endl;
-    }
-    else
-    {
-        cout << "This pipe in repair." << endl;
-    };
-    cout << endl;
-};
-
-void SavePipe(const Pipe& p)
-{
-    ofstream fout;
-    fout.open("data.txt", ios::out);
-    if (fout.is_open())
-    {
-        fout << p.id << endl
-            << p.diam << endl
+        fout << p.diam << endl
             << p.length << endl
             << p.in_repair << endl;
-        fout.close();
-    }
 };
 
 void EditPipe(Pipe& p)
 {
     p.in_repair = !p.in_repair;
 };
+
+template <typename T> 
+ T GetCorrectNumber(T min)
+{
+     T x;
+     while ((cin >> x).fail() || x<=min)
+     {
+         cin.clear();
+         cin.ignore(10000, '\n');
+         cout << "Enter length of pipe: ";
+     } 
+         return x;
+}
+ 
+ int GetCorrectNumberC(int min, int max)
+{
+     int x;
+     while ((cin >> x).fail() || x<min || x> max)
+     {
+         cin.clear();
+         cin.ignore(10000, '\n');
+         cout << "Your action ("<<min<<"-"<<max<<"): ";
+     } 
+         return x;
+}
 
 void PrintMenu()
 {
@@ -101,49 +65,99 @@ void PrintMenu()
          << "3. Save to file" << endl
          << "4. Load from file" << endl
          << "5. Edit pipe" << endl
-         << "0. Exit" << endl;
+         << "0. Exit" << endl
+         << "Your action: ";
+
 }
+
+ostream& operator << (ostream& out, Pipe& p)
+{
+    out << "Pipe's diameter: " << p.diam << endl
+        << "Pipe's length: " << p.length << endl;
+    if (p.in_repair)
+    {
+        out << "This pipe isn't in repair. " << endl;
+    }
+    else
+    {
+        out << "This pipe in repair." << endl;
+    }
+    return out;
+}
+
+istream& operator >> (istream& in, Pipe& p)
+{
+    cout << "Enter diameter of pipe: ";
+    p.diam = GetCorrectNumber(0);
+    cout << "Enter length of pipe: ";
+    p.length= GetCorrectNumber(0.0f);
+    cout << " " << endl;
+    return in;
+}
+
+Pipe& SelectPipe(vector<Pipe>& g)
+{
+    cout << "Enter pipe's index: ";
+    unsigned int index = GetCorrectNumberC(0u, g.size());
+    return g[index-1];
+}
+
 
 int main()
 {
-    Pipe p;
-    p.id = 0;
-    p.diam = 0;
-    p.length = 0.0;
-    p.in_repair = false;
+    vector <Pipe> pipeline;
     Pipe pl;
     while(1)
     { 
         PrintMenu();
-        int i = 0;
-        cout << "Your action: ";
-        cin >> i;
-        cout << endl;
-        switch (i)
+        
+        switch (GetCorrectNumberC(0,5))
         {
         case 1:
         {
-            pl = InputPipe();
+            cout << " " << endl;
+            Pipe pl;
+            cin >> pl;
+            pipeline.push_back(pl);
             break;
         }
         case 2:
         {
-            OutputPipe(pl);
+            cout << " " << endl;
+            for (auto& pl: pipeline)
+            cout << pl << endl;
             break;
         }
         case 3:
         {
-            SavePipe(pl);
+            ofstream fout;
+            fout.open("data.txt", ios::out);
+            if (fout.is_open())
+            {
+                fout << pipeline.size() << endl;
+                for (Pipe pl : pipeline)
+                    SavePipe(fout, pl);
+                fout.close();
+            }
             break;
         }
         case 4:
         {
-            pl = LoadPipe();
+            ifstream fin;
+            fin.open("data.txt", ios::in);
+            if (fin.is_open())
+            {
+                int count;
+                fin >> count;
+                while (count--);
+                    pipeline.push_back(LoadPipe(fin));
+                fin.close();
+            }
             break;
         }
         case 5:
         {
-            EditPipe(pl);
+            EditPipe(SelectPipe(pipeline));
             break;
         }
         case 0:
