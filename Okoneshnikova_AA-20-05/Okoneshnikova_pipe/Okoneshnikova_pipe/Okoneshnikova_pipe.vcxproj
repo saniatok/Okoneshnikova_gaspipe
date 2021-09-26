@@ -139,7 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CPipe.cpp" />
     <ClCompile Include="Okoneshnikova_pipe.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CPipe.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

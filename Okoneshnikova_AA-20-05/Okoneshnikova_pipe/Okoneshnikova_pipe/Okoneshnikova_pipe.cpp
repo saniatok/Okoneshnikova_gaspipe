@@ -1,15 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "CPipe.h"
+#include "utils.h"
 
 using namespace std;
-
-struct Pipe
-{
-    int diam;
-    float length;
-    bool in_repair;
-};
 
 Pipe LoadPipe(ifstream& fin)
 {
@@ -29,22 +24,10 @@ void SavePipe(ofstream& fout, const Pipe& p)
 
 void EditPipe(Pipe& p)
 {
-    p.in_repair = !p.in_repair;
+    p.Repair();
+    /*p.in_repair = !p.in_repair;*/
 };
 
-template <typename T> 
- T GetCorrectNumber(T min)
-{
-     T x;
-     while ((cin >> x).fail() || x<=min)
-     {
-         cin.clear();
-         cin.ignore(10000, '\n');
-         cout << "Enter length of pipe: ";
-     } 
-         return x;
-}
- 
  int GetCorrectNumberC(int min, int max)
 {
      int x;
@@ -68,31 +51,6 @@ void PrintMenu()
          << "0. Exit" << endl
          << "Your action: ";
 
-}
-
-ostream& operator << (ostream& out, Pipe& p)
-{
-    out << "Pipe's diameter: " << p.diam << endl
-        << "Pipe's length: " << p.length << endl;
-    if (p.in_repair)
-    {
-        out << "This pipe isn't in repair. " << endl;
-    }
-    else
-    {
-        out << "This pipe in repair." << endl;
-    }
-    return out;
-}
-
-istream& operator >> (istream& in, Pipe& p)
-{
-    cout << "Enter diameter of pipe: ";
-    p.diam = GetCorrectNumber(0);
-    cout << "Enter length of pipe: ";
-    p.length= GetCorrectNumber(0.0f);
-    cout << " " << endl;
-    return in;
 }
 
 Pipe& SelectPipe(vector<Pipe>& g)
@@ -149,6 +107,7 @@ int main()
             {
                 int count;
                 fin >> count;
+                pipeline.reserve(count);
                 while (count--);
                     pipeline.push_back(LoadPipe(fin));
                 fin.close();
