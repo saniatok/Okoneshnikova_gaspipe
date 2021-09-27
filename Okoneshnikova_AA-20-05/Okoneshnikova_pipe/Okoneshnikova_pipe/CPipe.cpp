@@ -4,9 +4,12 @@
 
 using namespace std;
 
+int Pipe::MaxID = 0;
+
 ostream& operator << (ostream& out, const Pipe& p)
 {
-    out << "Pipe's diameter: " << p.diam << endl
+    out << "Pipe's id: " << p.id << endl
+        << "Pipe's diameter: " << p.diam << endl
         << "Pipe's length: " << p.length << endl;
     if (p.in_repair)
     {
@@ -27,6 +30,13 @@ istream& operator >> (istream& in, Pipe& p)
     p.length = GetCorrectNumber(0.0f);
     cout << " " << endl;
     return in;
+}
+
+Pipe::Pipe()
+{
+    id = MaxID++;
+    diam = 1420;
+    length=18.3;
 }
 
 void Pipe::Repair()

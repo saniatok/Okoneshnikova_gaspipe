@@ -25,7 +25,6 @@ void SavePipe(ofstream& fout, const Pipe& p)
 void EditPipe(Pipe& p)
 {
     p.Repair();
-    /*p.in_repair = !p.in_repair;*/
 };
 
  int GetCorrectNumberC(int min, int max)
