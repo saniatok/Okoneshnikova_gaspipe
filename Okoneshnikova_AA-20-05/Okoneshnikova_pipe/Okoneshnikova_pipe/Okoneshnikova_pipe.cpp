@@ -17,7 +17,8 @@ Pipe LoadPipe(ifstream& fin)
 
 void SavePipe(ofstream& fout, const Pipe& p)
 {
-        fout << p.diam << endl
+    fout
+            << p.diam << endl
             << p.length << endl
             << p.in_repair << endl;
 };
@@ -27,16 +28,16 @@ void EditPipe(Pipe& p)
     p.Repair();
 };
 
- int GetCorrectNumberC(int min, int max)
+int GetCorrectNumberC(int min, int max)
 {
-     int x;
-     while ((cin >> x).fail() || x<min || x> max)
-     {
-         cin.clear();
-         cin.ignore(10000, '\n');
-         cout << "Your action ("<<min<<"-"<<max<<"): ";
-     } 
-         return x;
+    int x;
+    while ((cin >> x).fail() || x<min || x> max)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Your action (" << min << "-" << max << "): ";
+    }
+    return x;
 }
 
 void PrintMenu()
@@ -121,10 +122,6 @@ int main()
         case 0:
         {
             return 0;
-        }
-        default:
-        {
-            cout << "wrong action" << endl;
         }
         }
     }
