@@ -3,6 +3,7 @@
 #include <vector>
 #include "CPipe.h"
 #include "utils.h"
+#include "CompressionStation.h"
 
 using namespace std;
 
@@ -15,12 +16,31 @@ Pipe LoadPipe(ifstream& fin)
     return p;
 }
 
+CompressionStation LoadCompressionStation(ifstream& fin)
+{
+    CompressionStation cs;
+        fin >> cs.name;
+        fin >> cs.dep;
+        fin >> cs.workdep;
+        fin >> cs.eff;
+    return css;
+}
+
 void SavePipe(ofstream& fout, const Pipe& p)
 {
     fout
             << p.diam << endl
             << p.length << endl
             << p.in_repair << endl;
+};
+
+void SaveCompressionStation(ofstream& fout, const CompressionStation& cs)
+{
+    fout
+        << cs.name << endl
+        << cs.dep; << endl
+        << cs.workdep << endl
+        << cs.eff << endl;
 };
 
 void EditPipe(Pipe& p)
@@ -43,11 +63,13 @@ int GetCorrectNumberC(int min, int max)
 void PrintMenu()
 {
     cout << "Choose action:" << endl
-         <<"1. Input pipe" << endl
-         << "2. Output pipe" << endl
+         << "1. Input pipe" << endl
+         << "2. Output pipes and compression stations" << endl
          << "3. Save to file" << endl
          << "4. Load from file" << endl
          << "5. Edit pipe" << endl
+         << "6. Input compression station" << endl
+         << "7. Edit compression station" << endl
          << "0. Exit" << endl
          << "Your action: ";
 
@@ -63,13 +85,15 @@ Pipe& SelectPipe(vector<Pipe>& g)
 
 int main()
 {
+    vector <CompressionStation> compress;
     vector <Pipe> pipeline;
+    CompressionStation css;
     Pipe pl;
     while(1)
     { 
         PrintMenu();
         
-        switch (GetCorrectNumberC(0,5))
+        switch (GetCorrectNumberC(0,6))
         {
         case 1:
         {
@@ -84,6 +108,8 @@ int main()
             cout << " " << endl;
             for (auto& pl: pipeline)
             cout << pl << endl;
+            for (auto& css: compress)
+            cout << css << endl;
             break;
         }
         case 3:
@@ -119,6 +145,22 @@ int main()
             EditPipe(SelectPipe(pipeline));
             break;
         }
+        case 6:
+        {
+            cout << " " << endl;
+            CompressionStation css;
+            cin >> css;
+            compress.push_back(css);
+            break;
+        }
+     /*   case 7:
+        {
+            cout << " " << endl;
+            CompressionStation css;
+            cin >> css;
+            compress.push_back(css);
+            break;
+        }*/
         case 0:
         {
             return 0;
