@@ -122,6 +122,8 @@ int main()
             cout << " " << endl;
             for (auto& pl: pipeline)
             cout << pl << endl;
+            for (auto& css: compress)
+            cout << css << endl;
             break;
         }
         case 3:
