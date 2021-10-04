@@ -25,9 +25,9 @@ ostream& operator << (ostream& out, const Pipe& p)
 istream& operator >> (istream& in, Pipe& p)
 {
     cout << "Enter diameter of pipe: ";
-    p.diam = GetCorrectNumber(0);
+    p.diam = GetCorrectNumber(10000);
     cout << "Enter length of pipe: ";
-    p.length = GetCorrectNumber(0.0f);
+    p.length = GetCorrectNumber(10000.0f);
     cout << " " << endl;
     return in;
 }

@@ -53,21 +53,10 @@ void EditCompressionStation(CompressionStation& cs)
     cs.EditCS();
 };
 
-int GetCorrectNumberC(int min, int max)
-{
-    int x;
-    while ((cin >> x).fail() || x<min || x> max)
-    {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Your action (" << min << "-" << max << "): ";
-    }
-    return x;
-}
-
 void PrintMenu()
 {
-    cout << "Choose action:" << endl
+    cout << " " << endl
+         << "Choose action:" << endl
          << "1. Input pipe" << endl
          << "2. Output pipes" << endl
          << "3. Save pipe to file" << endl
@@ -85,14 +74,14 @@ void PrintMenu()
 Pipe& SelectPipe(vector<Pipe>& g)
 {
     cout << "Enter pipe's index: ";
-    unsigned int index = GetCorrectNumberC(0u, g.size());
+    unsigned int index = GetCorrectNumber(g.size());
     return g[index-1];
 }
 
 CompressionStation& SelectCompressionStation(vector<CompressionStation>& g)
 {
     cout << "Enter Compression Station's index: ";
-    unsigned int index = GetCorrectNumberC(0u, g.size());
+    unsigned int index = GetCorrectNumber(g.size());
     return g[index-1];
 }
 
@@ -107,7 +96,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumberC(0,10))
+        switch (GetCorrectNumber(10))
         {
         case 1:
         {
@@ -122,8 +111,6 @@ int main()
             cout << " " << endl;
             for (auto& pl: pipeline)
             cout << pl << endl;
-            for (auto& css: compress)
-            cout << css << endl;
             break;
         }
         case 3:
@@ -179,8 +166,8 @@ int main()
             if (fout.is_open())
             {
                 fout << compress.size() << endl;
-                for (CompressionStation cs : compress)
-                    SaveCompressionStation(fout, cs);
+                for (CompressionStation css : compress)
+                    SaveCompressionStation(fout, css);
                 fout.close();
             }
             break;

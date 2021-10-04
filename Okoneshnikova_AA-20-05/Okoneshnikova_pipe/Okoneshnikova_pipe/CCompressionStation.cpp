@@ -25,25 +25,25 @@ ostream& operator<<(ostream& out, const CompressionStation& cs)
 
 istream& operator>>(istream& in, CompressionStation& cs)
 {
-
+    
     cout << "Enter name of Compression Station: ";
     cin.ignore(10000, '\n');
     getline(cin, cs.name);
     cout << "Enter number of Compression Station's departments: ";
-    cs.dep = GetCorrectNumber(0);
+    cs.dep = GetCorrectNumber(1000);
     cout << "Enter number of Compression Station's working departments: ";
-    cs.workdep = GetCorrectNumber(0);
-    cout << "Enter efficieny of Compression Station: ";
-    cs.eff = GetCorrectNumberC(0.0f, 1.0f);
+    cs.workdep = GetCorrectNumber(cs.dep);
+    cout << "Enter efficieny of Compression Station(0-1): ";
+    cs.eff = GetCorrectNumber(1.0f);
     cout << " " << endl;
     return in;
 }
 
 void CompressionStation::EditCS()
 {
-    bool edit
+    bool edit;
     cout << "Launch(1) or stop(0) Compression Station's department: ";
-    edit = GetCorrectNumberC(0, 1);
+    edit = GetCorrectNumber(1);
     if (edit && workdep<dep)
     {
         ++workdep;
