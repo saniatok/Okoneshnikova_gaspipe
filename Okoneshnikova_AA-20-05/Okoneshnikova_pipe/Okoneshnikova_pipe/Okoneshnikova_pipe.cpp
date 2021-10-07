@@ -7,40 +7,38 @@
 
 using namespace std;
 
-Pipe LoadPipe(ifstream& fin)
+template <typename T>
+void LoadAll(vector <T>& vector, int count, ifstream& fin)
 {
-    Pipe p;
-        fin >> p.diam;
-        fin >> p.length;
-        fin >> p.in_repair;
-    return p;
+    vector.resize(0);  
+    vector.reserve(count);
+    while (count--)
+    {
+        T exit;
+        fin >> exit;
+        vector.push_back(exit);
+        //vector.push_back(T(fin));
+    }
 }
 
-CompressionStation LoadCompressionStation(ifstream& fin)
+void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& compress )
 {
-    CompressionStation cs;
-         fin >> cs.name;
-         fin >> cs.dep;
-         fin >> cs.workdep;
-         fin >> cs.eff;
-    return cs;
-}
-
-void SavePipe(ofstream& fout, const Pipe& p)
-{
-    fout
-            << p.diam << endl
-            << p.length << endl
-            << p.in_repair << endl;
-};
-
-void SaveCompressionStation(ofstream& fout, const CompressionStation& cs)
-{
-    fout
-        << cs.name << endl
-        << cs.dep << endl
-        << cs.workdep << endl
-        << cs.eff << endl;
+    ofstream fout;
+    fout.open("data.txt", ios::out);
+    if (fout.is_open())
+    {
+        fout << pipeline.size() << endl;
+        fout << compress.size() << endl;
+        for (auto& exit : pipeline)
+        {
+            fout << exit;
+        }
+        for (auto& exit : compress)
+        {
+            fout << exit;
+        }
+    }
+    fout.close();
 };
 
 void EditPipe(Pipe& p)
@@ -58,15 +56,13 @@ void PrintMenu()
     cout << " " << endl
          << "Choose action:" << endl
          << "1. Input pipe" << endl
-         << "2. Output pipes" << endl
-         << "3. Save pipe to file" << endl
-         << "4. Load pipe from file" << endl
-         << "5. Edit pipe" << endl
+         << "2. Output pipe" << endl
+         << "3. Edit pipe" << endl
+         << "4. Save pipes and compression stations to file" << endl
+         << "5. Load pipes and compression stations from file" << endl
          << "6. Input compression station" << endl
-         << "7. Edit compression station" << endl
-         << "8. Save compression station to file" << endl
-         << "9. Load compression station from file" << endl
-         << "10. Output compression stations" << endl
+         << "7. Output compression station" << endl
+         << "8. Edit compression station" << endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -96,7 +92,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(10))
+        switch (GetCorrectNumber(8))
         {
         case 1:
         {
@@ -113,35 +109,34 @@ int main()
             cout << pl << endl;
             break;
         }
-        case 3:
-        {
-            ofstream fout;
-            fout.open("pipe.txt", ios::out);
-            if (fout.is_open())
-            {
-                fout << pipeline.size() << endl;
-                for (Pipe pl : pipeline)
-                    SavePipe(fout, pl);
-                fout.close();
-            }
-            break;
-        }
         case 4:
         {
-            ifstream fin;
-            fin.open("pipe.txt", ios::in);
-            if (fin.is_open())
+            if (pipeline.size() != 0 || compress.size() != 0)
             {
-                int count;
-                fin >> count;
-                pipeline.reserve(count);
-                while (count--);
-                    pipeline.push_back(LoadPipe(fin));
-                fin.close();
+                SaveAll(pipeline, compress);
+            }
+            else
+            {
+                cout << endl << "No saving data" << endl;
             }
             break;
         }
         case 5:
+        {
+            ifstream fin;
+            fin.open("data.txt", ios::in);
+            if (fin.is_open())
+            {
+                int countPipe, countCS;
+                fin >> countPipe;
+                fin >> countCS;
+                LoadAll(pipeline, countPipe, fin);
+                LoadAll(compress, countCS, fin);
+            }
+            fin.close();
+            break;
+        }
+        case 3:
         {
             EditPipe(SelectPipe(pipeline));
             break;
@@ -154,40 +149,12 @@ int main()
             compress.push_back(css);
             break;
         }
-        case 7:
+        case 8:
            {
                EditCompressionStation(SelectCompressionStation(compress));
                break;
            }
-        case 8:
-        {
-            ofstream fout;
-            fout.open("compression_station.txt", ios::out);
-            if (fout.is_open())
-            {
-                fout << compress.size() << endl;
-                for (CompressionStation css : compress)
-                    SaveCompressionStation(fout, css);
-                fout.close();
-            }
-            break;
-        }
-        case 9:
-        {
-            ifstream fin;
-            fin.open("compression_station.txt", ios::in);
-            if (fin.is_open())
-            {
-                int count;
-                fin >> count;
-                compress.reserve(count);
-                while (count--);
-                compress.push_back(LoadCompressionStation(fin));
-                fin.close();
-            }
-            break;
-        }
-        case 10:
+        case 7:
         {
             cout << " " << endl;
             for (auto& cs : compress)
