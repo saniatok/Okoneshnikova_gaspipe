@@ -1,6 +1,7 @@
 #include "CPipe.h"
 #include <iostream>
 #include "utils.h"
+#include <fstream>
 
 using namespace std;
 
@@ -28,15 +29,32 @@ istream& operator >> (istream& in, Pipe& p)
     p.diam = GetCorrectNumber(10000);
     cout << "Enter length of pipe: ";
     p.length = GetCorrectNumber(10000.0f);
-    cout << " " << endl;
+    cout << endl;
     return in;
+}
+
+ofstream& operator<<(ofstream& fout, const Pipe& p)
+{
+    fout << endl
+         << p.id << endl 
+         << p.diam << endl 
+         << p.length << endl 
+         << p.in_repair << endl;
+    return fout;
+}
+
+ifstream& operator>>(ifstream& fin, Pipe& p)
+{
+    fin >> p.id;
+    fin >> p.diam;
+    fin >> p.length;
+    fin >> p.in_repair;
+    return fin;
 }
 
 Pipe::Pipe()
 {
     id = MaxID++;
-    diam = 1420;
-    length=18.3;
 }
 
 void Pipe::Repair()

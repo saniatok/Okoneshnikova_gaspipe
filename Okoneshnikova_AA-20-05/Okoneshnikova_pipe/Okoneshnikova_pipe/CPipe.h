@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -18,5 +19,7 @@ public:
    
     friend ostream& operator << (ostream& out, const Pipe& p);
     friend istream& operator >> (istream& in, Pipe& p);
+    friend ofstream& operator << (ofstream& fout, const Pipe& p);
+    friend ifstream& operator >> (ifstream& fin, Pipe& p);
 };
 

@@ -1,17 +1,12 @@
 #include "CCompressionStation.h"
 #include <iostream>
 #include "utils.h"
+#include <string>
+#include <fstream>
 
 using namespace std;
 
 int CompressionStation::MaxID = 0;
-
-CompressionStation::CompressionStation()
-{
-    id = MaxID++;;
-    name = "unknown";
-    eff = 1;
-}
 
 ostream& operator<<(ostream& out, const CompressionStation& cs)
 {
@@ -39,6 +34,34 @@ istream& operator>>(istream& in, CompressionStation& cs)
     return in;
 }
 
+ofstream& operator<<(ofstream& fout, const CompressionStation& cs)
+{
+    fout << endl
+        << cs.id << endl
+        << cs.name << endl 
+        << cs.dep << endl
+        << cs.workdep << endl
+        << cs.eff << endl;
+    return fout;
+}
+
+ifstream& operator>>(ifstream& fin, CompressionStation& cs)
+{
+    fin >> cs.id;
+    fin.clear();
+    fin.ignore(10000, '\n');
+    getline(fin, cs.name);
+    fin >> cs.dep;
+    fin >> cs.workdep;
+    fin >> cs.eff;
+    return fin;
+}
+
+CompressionStation::CompressionStation()
+{
+    id = MaxID++;
+}
+
 void CompressionStation::EditCS()
 {
     bool edit;
@@ -48,8 +71,16 @@ void CompressionStation::EditCS()
     {
         ++workdep;
     }
+    else
+    {
+        cout << "excess of permissible count of departments" << endl;
+    }
     if (!edit && workdep>0)
     {
         --workdep;
+    }
+    else
+    {
+        cout << "count of working departments can't be less than 0" << endl;
     }
 }

@@ -4,6 +4,7 @@
 #include "CPipe.h"
 #include "utils.h"
 #include "CCompressionStation.h"
+#include <string>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ void LoadAll(vector <T>& vector, int count, ifstream& fin)
         T exit;
         fin >> exit;
         vector.push_back(exit);
-        //vector.push_back(T(fin));
+       /* vector.push_back(T(fin));*/
     }
 }
 
@@ -41,6 +42,35 @@ void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& c
     fout.close();
 };
 
+bool Exist(size_t size)
+{
+    bool i = 0;
+    if (size == 0)
+    {
+        cout  << "Add data first" << endl;
+    }
+    else
+    { 
+        i = 1;
+    }
+    return i;
+};
+
+int Empty(ifstream& File)   // https://www.cyberforum.ru/cpp-beginners/thread1983332.html
+{
+    int size = 0;   
+    if (File.is_open())
+    {
+        File.seekg(0, std::ios::end);
+        size = File.tellg();
+        File.seekg(0, std::ios::beg);
+        if (size == 0)
+            cout << endl << "No loading data" << endl;
+        File.close();
+    }
+    return size;
+}
+
 void EditPipe(Pipe& p)
 {
     p.Repair();
@@ -53,15 +83,15 @@ void EditCompressionStation(CompressionStation& cs)
 
 void PrintMenu()
 {
-    cout << " " << endl
+    cout << endl
          << "Choose action:" << endl
          << "1. Input pipe" << endl
-         << "2. Output pipe" << endl
+         << "2. Output pipes" << endl
          << "3. Edit pipe" << endl
          << "4. Save pipes and compression stations to file" << endl
          << "5. Load pipes and compression stations from file" << endl
          << "6. Input compression station" << endl
-         << "7. Output compression station" << endl
+         << "7. Output compression stations" << endl
          << "8. Edit compression station" << endl
          << "0. Exit" << endl
          << "Your action: ";
@@ -81,7 +111,6 @@ CompressionStation& SelectCompressionStation(vector<CompressionStation>& g)
     return g[index-1];
 }
 
-
 int main()
 {
     vector <CompressionStation> compress;
@@ -96,7 +125,7 @@ int main()
         {
         case 1:
         {
-            cout << " " << endl;
+            cout << endl;
             Pipe pl;
             cin >> pl;
             pipeline.push_back(pl);
@@ -104,9 +133,12 @@ int main()
         }
         case 2:
         {
-            cout << " " << endl;
-            for (auto& pl: pipeline)
-            cout << pl << endl;
+            cout << endl;
+            if (Exist(compress.size()))
+            {
+                for (auto& pl : pipeline)
+                    cout << pl << endl;
+            }
             break;
         }
         case 4:
@@ -127,23 +159,31 @@ int main()
             fin.open("data.txt", ios::in);
             if (fin.is_open())
             {
-                int countPipe, countCS;
-                fin >> countPipe;
-                fin >> countCS;
-                LoadAll(pipeline, countPipe, fin);
-                LoadAll(compress, countCS, fin);
+                int size=Empty(fin);
+                if (size != 0)
+                {
+                    int countPipe, countCS;
+                    fin >> countPipe;
+                    fin >> countCS;
+                    LoadAll(pipeline, countPipe, fin);
+                    LoadAll(compress, countCS, fin);
+                }
             }
             fin.close();
             break;
         }
         case 3:
         {
-            EditPipe(SelectPipe(pipeline));
+            cout << endl;
+            if (Exist(compress.size()))
+            {
+                EditPipe(SelectPipe(pipeline));
+            }
             break;
         }
         case 6:
         {
-            cout << " " << endl;
+            cout << endl;
             CompressionStation css;
             cin >> css;
             compress.push_back(css);
@@ -151,14 +191,21 @@ int main()
         }
         case 8:
            {
-               EditCompressionStation(SelectCompressionStation(compress));
-               break;
+            cout << endl;
+            if (Exist(compress.size()))
+            {
+                EditCompressionStation(SelectCompressionStation(compress));
+            }
+            break;
            }
         case 7:
         {
-            cout << " " << endl;
-            for (auto& cs : compress)
-                cout << cs << endl;
+            cout << endl;
+            if (Exist(compress.size()))
+            {
+                for (auto& css : compress)
+                    cout << css << endl;
+            }
             break;
         }
         case 0:
