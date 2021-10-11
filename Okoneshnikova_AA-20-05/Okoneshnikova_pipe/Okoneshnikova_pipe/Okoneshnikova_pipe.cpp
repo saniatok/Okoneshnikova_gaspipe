@@ -18,7 +18,6 @@ void LoadAll(vector <T>& vector, int count, ifstream& fin)
         T exit;
         fin >> exit;
         vector.push_back(exit);
-       /* vector.push_back(T(fin));*/
     }
 }
 
@@ -56,20 +55,20 @@ bool Exist(size_t size)
     return i;
 };
 
-int Empty(ifstream& File)   // https://www.cyberforum.ru/cpp-beginners/thread1983332.html
-{
-    int size = 0;   
-    if (File.is_open())
-    {
-        File.seekg(0, std::ios::end);
-        size = File.tellg();
-        File.seekg(0, std::ios::beg);
-        if (size == 0)
-            cout << endl << "No loading data" << endl;
-        File.close();
-    }
-    return size;
-}
+//int Empty(ifstream& File)   // https://www.cyberforum.ru/cpp-beginners/thread1983332.html
+//{
+//    int size = 0;   
+//    if (File.is_open())
+//    {
+//        File.seekg(0, std::ios::end);
+//        size = File.tellg();
+//        //File.seekg(0, std::ios::beg);
+//        if (size == 0)
+//            cout << endl << "No loading data" << endl;
+//        File.close();
+//    }
+//    return size;
+//}
 
 void EditPipe(Pipe& p)
 {
@@ -134,7 +133,7 @@ int main()
         case 2:
         {
             cout << endl;
-            if (Exist(compress.size()))
+            if (Exist(pipeline.size()))
             {
                 for (auto& pl : pipeline)
                     cout << pl << endl;
@@ -159,15 +158,15 @@ int main()
             fin.open("data.txt", ios::in);
             if (fin.is_open())
             {
-                int size=Empty(fin);
+                /*int size=Empty(fin);
                 if (size != 0)
-                {
+                {*/
                     int countPipe, countCS;
                     fin >> countPipe;
                     fin >> countCS;
                     LoadAll(pipeline, countPipe, fin);
                     LoadAll(compress, countCS, fin);
-                }
+                /*}*/
             }
             fin.close();
             break;
@@ -175,7 +174,7 @@ int main()
         case 3:
         {
             cout << endl;
-            if (Exist(compress.size()))
+            if (Exist(pipeline.size()))
             {
                 EditPipe(SelectPipe(pipeline));
             }

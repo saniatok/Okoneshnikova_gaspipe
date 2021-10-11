@@ -64,23 +64,32 @@ CompressionStation::CompressionStation()
 
 void CompressionStation::EditCS()
 {
-    bool edit;
     cout << "Launch(1) or stop(0) Compression Station's department: ";
-    edit = GetCorrectNumber(1);
-    if (edit && workdep<dep)
+    switch (GetCorrectNumber(1))
     {
-        ++workdep;
+    case 1:
+    {
+        if (workdep < dep)
+        {
+            ++workdep;
+        }
+        else
+        {
+            cout << endl << "excess of permissible count of departments" << endl;
+        }
+        break;
     }
-    else
+    case 0:
     {
-        cout << "excess of permissible count of departments" << endl;
+        if (workdep > 0)
+        {
+            --workdep;
+        }
+        else
+        {
+            cout << endl << "count of working departments can't be less than 0" << endl;
+        }
+        break;
     }
-    if (!edit && workdep>0)
-    {
-        --workdep;
-    }
-    else
-    {
-        cout << "count of working departments can't be less than 0" << endl;
     }
 }
