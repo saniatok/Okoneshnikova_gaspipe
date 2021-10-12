@@ -15,11 +15,12 @@ void LoadAll(vector <T>& vector, int count, ifstream& fin)
     vector.reserve(count);
     while (count--)
     {
-        T exit;
-        fin >> exit;
-        vector.push_back(exit);
+        T data;
+        fin >> data;
+        vector.push_back(data);
     }
 }
+
 
 void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& compress )
 {
@@ -29,13 +30,13 @@ void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& c
     {
         fout << pipeline.size() << endl;
         fout << compress.size() << endl;
-        for (auto& exit : pipeline)
+        for (auto& data : pipeline)
         {
-            fout << exit;
+            fout << data;
         }
-        for (auto& exit : compress)
+        for (auto& data : compress)
         {
-            fout << exit;
+            fout << data;
         }
     }
     fout.close();
@@ -43,16 +44,12 @@ void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& c
 
 bool Exist(size_t size)
 {
-    bool i = 0;
     if (size == 0)
     {
         cout  << "Add data first" << endl;
+        return false;
     }
-    else
-    { 
-        i = 1;
-    }
-    return i;
+    return true;
 };
 
 //int Empty(ifstream& File)   // https://www.cyberforum.ru/cpp-beginners/thread1983332.html
@@ -85,13 +82,12 @@ void PrintMenu()
     cout << endl
          << "Choose action:" << endl
          << "1. Input pipe" << endl
-         << "2. Output pipes" << endl
-         << "3. Edit pipe" << endl
+         << "2. Edit pipe" << endl
+         << "3. Output pipes and compression stations" << endl
          << "4. Save pipes and compression stations to file" << endl
          << "5. Load pipes and compression stations from file" << endl
          << "6. Input compression station" << endl
-         << "7. Output compression stations" << endl
-         << "8. Edit compression station" << endl
+         << "7. Edit compression station" << endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -99,28 +95,27 @@ void PrintMenu()
 Pipe& SelectPipe(vector<Pipe>& g)
 {
     cout << "Enter pipe's index: ";
-    unsigned int index = GetCorrectNumber(g.size());
-    return g[index-1];
+    unsigned int index = GetCorrectSize(g.size());
+    return g[index];
 }
 
 CompressionStation& SelectCompressionStation(vector<CompressionStation>& g)
 {
     cout << "Enter Compression Station's index: ";
-    unsigned int index = GetCorrectNumber(g.size());
-    return g[index-1];
+    unsigned int index = GetCorrectSize(g.size());
+    return g[index];
 }
 
 int main()
 {
     vector <CompressionStation> compress;
     vector <Pipe> pipeline;
-    CompressionStation css;
-    Pipe pl;
+
     while(1)
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(8))
+        switch (GetCorrectNumber(7))
         {
         case 1:
         {
@@ -130,14 +125,19 @@ int main()
             pipeline.push_back(pl);
             break;
         }
-        case 2:
+        case 3:
         {
             cout << endl;
-            if (Exist(pipeline.size()))
+            if (pipeline.size() != 0 || compress.size() != 0)
             {
                 for (auto& pl : pipeline)
                     cout << pl << endl;
+                cout << endl;
+                for (auto& css : compress)
+                    cout << css << endl;
             }
+            else
+                cout << "No data to output" << endl;
             break;
         }
         case 4:
@@ -171,7 +171,7 @@ int main()
             fin.close();
             break;
         }
-        case 3:
+        case 2:
         {
             cout << endl;
             if (Exist(pipeline.size()))
@@ -188,22 +188,12 @@ int main()
             compress.push_back(css);
             break;
         }
-        case 8:
-           {
-            cout << endl;
-            if (Exist(compress.size()))
-            {
-                EditCompressionStation(SelectCompressionStation(compress));
-            }
-            break;
-           }
         case 7:
         {
             cout << endl;
             if (Exist(compress.size()))
             {
-                for (auto& css : compress)
-                    cout << css << endl;
+                EditCompressionStation(SelectCompressionStation(compress));
             }
             break;
         }
