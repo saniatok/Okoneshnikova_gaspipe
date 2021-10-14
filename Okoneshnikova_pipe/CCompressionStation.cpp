@@ -59,7 +59,7 @@ ifstream& operator>>(ifstream& fin, CompressionStation& cs)
 
 CompressionStation::CompressionStation()
 {
-    id = MaxID++;
+    //id = MaxID++;
 }
 
 void CompressionStation::EditCS()

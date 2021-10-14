@@ -54,7 +54,7 @@ ifstream& operator>>(ifstream& fin, Pipe& p)
 
 Pipe::Pipe()
 {
-    id = MaxID++;
+    //id = MaxID++;
 }
 
 void Pipe::Repair()

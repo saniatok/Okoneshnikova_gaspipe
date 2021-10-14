@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 #include "CPipe.h"
 #include "utils.h"
 #include "CCompressionStation.h"
@@ -8,12 +9,14 @@
 
 using namespace std;
 
+/*FIX THIS*/
 template <typename T>
-void LoadAll(vector <T>& vector, int count, ifstream& fin)
+void LoadAll(unordered_map <int, T>& map, int count, ifstream& fin)
 {
-    vector.resize(0);  
-    vector.reserve(count);
-    while (count--)
+    vector <int> id;
+    /*vector.resize(0);*/  
+    id.reserve(map.size());
+    while (map.size()--)
     {
         T data;
         fin >> data;
@@ -21,22 +24,24 @@ void LoadAll(vector <T>& vector, int count, ifstream& fin)
     }
 }
 
-
-void SaveAll(const vector <Pipe>& pipeline, const vector <CompressionStation>& compress )
+void SaveAll(const unordered_map < int, Pipe>& pipeline, const unordered_map <int, CompressionStation>& compress )
 {
     ofstream fout;
-    fout.open("data.txt", ios::out);
+    string file;
+    cout << endl << "Enter name of file: ";
+    cin >> file;
+    fout.open(file+".txt", ios::out);
     if (fout.is_open())
     {
         fout << pipeline.size() << endl;
         fout << compress.size() << endl;
-        for (auto& data : pipeline)
+        for (const auto& data : pipeline)
         {
-            fout << data;
+            fout << data.second;
         }
-        for (auto& data : compress)
+        for (const auto& data : compress)
         {
-            fout << data;
+            fout << data.second;
         }
     }
     fout.close();
@@ -88,18 +93,20 @@ void PrintMenu()
          << "5. Load pipes and compression stations from file" << endl
          << "6. Input compression station" << endl
          << "7. Edit compression station" << endl
+         << "8. Delete pipe" << endl
+         << "9. Delete cimoression station" << endl
          << "0. Exit" << endl
          << "Your action: ";
 }
 
-Pipe& SelectPipe(vector<Pipe>& g)
+Pipe& SelectPipe(unordered_map<int, Pipe>& g)
 {
     cout << "Enter pipe's index: ";
     unsigned int index = GetCorrectSize(g.size());
     return g[index];
 }
 
-CompressionStation& SelectCompressionStation(vector<CompressionStation>& g)
+CompressionStation& SelectCompressionStation(unordered_map<int, CompressionStation>& g)
 {
     cout << "Enter Compression Station's index: ";
     unsigned int index = GetCorrectSize(g.size());
@@ -108,8 +115,8 @@ CompressionStation& SelectCompressionStation(vector<CompressionStation>& g)
 
 int main()
 {
-    vector <CompressionStation> compress;
-    vector <Pipe> pipeline;
+    unordered_map <int, CompressionStation> compress;
+    unordered_map <int, Pipe> pipeline;
 
     while(1)
     { 
@@ -120,9 +127,9 @@ int main()
         case 1:
         {
             cout << endl;
-            Pipe pl;
-            cin >> pl;
-            pipeline.push_back(pl);
+           /* Pipe pl;
+            cin >> pl;*/
+            pipeline.insert(pair <int, Pipe> (Pipe::MaxID+1, Pipe()));
             break;
         }
         case 3:
@@ -130,11 +137,11 @@ int main()
             cout << endl;
             if (pipeline.size() != 0 || compress.size() != 0)
             {
-                for (auto& pl : pipeline)
-                    cout << pl << endl;
+                for (const pair <int, Pipe>& pl:pipeline )
+                    cout << pl.second << endl;
                 cout << endl;
-                for (auto& css : compress)
-                    cout << css << endl;
+                for (const pair <int, CompressionStation>& css : compress)
+                    cout << css.second << endl;
             }
             else
                 cout << "No data to output" << endl;
@@ -183,9 +190,10 @@ int main()
         case 6:
         {
             cout << endl;
-            CompressionStation css;
+            /*CompressionStation css;
             cin >> css;
-            compress.push_back(css);
+            compress.push_back(css);*/
+            compress.insert(pair <int, CompressionStation> (CompressionStation::MaxID+1,CompressionStation()));
             break;
         }
         case 7:
@@ -196,6 +204,10 @@ int main()
                 EditCompressionStation(SelectCompressionStation(compress));
             }
             break;
+        }
+        case 8:
+        {
+
         }
         case 0:
         {
