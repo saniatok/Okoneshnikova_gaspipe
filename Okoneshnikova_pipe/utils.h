@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <unordered_map>
 
 template <typename T>
 T GetCorrectNumber(T max)
@@ -15,14 +16,15 @@ T GetCorrectNumber(T max)
 }
 
 template <typename T>
-T GetCorrectSize(T max)
+int findMaxID(unordered_map<int, T>& map)
 {
-    T x;
-    while ((std::cin >> x).fail() || x<0 || x >= max)
+    int MaxID = 0;
+    for (const auto& data : map)
     {
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Try again, please: ";
+        if (data.second.getId() > MaxID)
+        {
+            MaxID = data.second.getId();
+        }
     }
-    return x;
+    return MaxID;
 }

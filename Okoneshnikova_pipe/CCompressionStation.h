@@ -16,7 +16,14 @@ public:
     int workdep;
     float eff;
 
+    int getId() const;
+    string getName() const;
+    int getDep() const;
+    int getWorkDep() const;
+    float getEff() const;
+
     CompressionStation();
+    CompressionStation(std::ifstream& in);
     void EditCS();
 
     friend ostream& operator << (ostream& out, const CompressionStation& cs);

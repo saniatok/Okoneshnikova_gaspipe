@@ -7,6 +7,24 @@ using namespace std;
 
 int Pipe::MaxID = 0;
 
+Pipe::Pipe()
+{
+    this->id = ++MaxID;
+    cout  << "Enter diameter of pipe: ";
+    this->diam = GetCorrectNumber(10000); 
+    cout << "Enter diameter of pipe: ";
+    this->length = GetCorrectNumber(100.0f);
+    this->in_repair = false;
+}
+
+Pipe::Pipe(std::ifstream& in)
+{
+    in >> this->id;
+    in >> this->diam;
+    in >> this->length;
+    in >> this->in_repair;
+}
+
 ostream& operator << (ostream& out, const Pipe& p)
 {
     out << "Pipe's id: " << p.id << endl
@@ -27,8 +45,8 @@ istream& operator >> (istream& in, Pipe& p)
 {
     cout << "Enter diameter of pipe: ";
     p.diam = GetCorrectNumber(10000);
-    cout << "Enter length of pipe: ";
-    p.length = GetCorrectNumber(10000.0f);
+    cout << "Enter diameter of pipe: ";
+    p.length = GetCorrectNumber(100.0f);
     cout << endl;
     return in;
 }
@@ -52,10 +70,26 @@ ifstream& operator>>(ifstream& fin, Pipe& p)
     return fin;
 }
 
-Pipe::Pipe()
+int Pipe::getId() const
 {
-    //id = MaxID++;
+    return id;
 }
+
+int Pipe::getDiam() const
+{
+    return diam;
+}
+
+double Pipe::getLength() const
+{
+    return length;
+}
+
+bool Pipe::getRepair() const
+{
+    return in_repair;
+}
+
 
 void Pipe::Repair()
 {

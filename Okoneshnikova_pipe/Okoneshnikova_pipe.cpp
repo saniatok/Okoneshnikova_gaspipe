@@ -16,11 +16,18 @@ void LoadAll(unordered_map <int, T>& map, int count, ifstream& fin)
     vector <int> id;
     /*vector.resize(0);*/  
     id.reserve(map.size());
-    while (map.size()--)
+    for (const auto& it : map)
     {
-        T data;
-        fin >> data;
-        vector.push_back(data);
+        id.push_back(it.first);
+    }
+    for (int i : id)
+    {
+        map.erase(i);
+    }
+    while (count--)
+    {
+        T val(fin);
+        map.insert(pair<int, T>(val.getId(), val));
     }
 }
 
@@ -35,13 +42,13 @@ void SaveAll(const unordered_map < int, Pipe>& pipeline, const unordered_map <in
     {
         fout << pipeline.size() << endl;
         fout << compress.size() << endl;
-        for (const auto& data : pipeline)
+        for (const auto& p : pipeline)
         {
-            fout << data.second;
+            fout << p.second;
         }
-        for (const auto& data : compress)
+        for (const auto& css : compress)
         {
-            fout << data.second;
+            fout << css.second;
         }
     }
     fout.close();
@@ -72,15 +79,15 @@ bool Exist(size_t size)
 //    return size;
 //}
 
-void EditPipe(Pipe& p)
-{
-    p.Repair();
-};
+//void EditPipe(Pipe& p)
+//{
+//    p.Repair();
+//};
 
-void EditCompressionStation(CompressionStation& cs)
-{
-    cs.EditCS();
-};
+//void EditCompressionStation(CompressionStation& cs)
+//{
+//    cs.EditCS();
+//};
 
 void PrintMenu()
 {
@@ -99,18 +106,26 @@ void PrintMenu()
          << "Your action: ";
 }
 
-Pipe& SelectPipe(unordered_map<int, Pipe>& g)
+void EditPipe(unordered_map<int, Pipe>& g)
 {
     cout << "Enter pipe's index: ";
-    unsigned int index = GetCorrectSize(g.size());
-    return g[index];
+    int id = GetCorrectNumber(findMaxID(g));
+    unordered_map<int, Pipe>::iterator it = g.find(id);
+    if (it != g.end())
+    {
+        it->second.Repair();
+    }
 }
 
-CompressionStation& SelectCompressionStation(unordered_map<int, CompressionStation>& g)
+void EditCompressionStation(unordered_map<int, CompressionStation>& g)
 {
     cout << "Enter Compression Station's index: ";
-    unsigned int index = GetCorrectSize(g.size());
-    return g[index];
+    int id = GetCorrectNumber(findMaxID(g));
+    unordered_map<int, CompressionStation>::iterator it = g.find(id);
+    if (it != g.end())
+    {
+        it->second.EditCS();
+    }
 }
 
 int main()
@@ -162,20 +177,21 @@ int main()
         case 5:
         {
             ifstream fin;
-            fin.open("data.txt", ios::in);
+            string file;
+            cout << endl << "Enter name of file: ";
+            cin >> file;
+            fin.open(file + ".txt", ios::out);
             if (fin.is_open())
             {
-                /*int size=Empty(fin);
-                if (size != 0)
-                {*/
                     int countPipe, countCS;
                     fin >> countPipe;
                     fin >> countCS;
                     LoadAll(pipeline, countPipe, fin);
                     LoadAll(compress, countCS, fin);
-                /*}*/
             }
             fin.close();
+            Pipe::MaxID = findMaxID(pipeline);
+            CompressionStation::MaxID = findMaxID(compress);
             break;
         }
         case 2:
@@ -183,16 +199,13 @@ int main()
             cout << endl;
             if (Exist(pipeline.size()))
             {
-                EditPipe(SelectPipe(pipeline));
+                EditPipe(pipeline);
             }
             break;
         }
         case 6:
         {
             cout << endl;
-            /*CompressionStation css;
-            cin >> css;
-            compress.push_back(css);*/
             compress.insert(pair <int, CompressionStation> (CompressionStation::MaxID+1,CompressionStation()));
             break;
         }
@@ -201,14 +214,14 @@ int main()
             cout << endl;
             if (Exist(compress.size()))
             {
-                EditCompressionStation(SelectCompressionStation(compress));
+                EditCompressionStation(compress);
             }
             break;
         }
-        case 8:
+        /*case 8:
         {
 
-        }
+        }*/
         case 0:
         {
             return 0;
