@@ -137,7 +137,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(7))
+        switch (GetCorrectNumber(9))
         {
         case 1:
         {
@@ -218,10 +218,40 @@ int main()
             }
             break;
         }
-        /*case 8:
+        case 8:
         {
-
-        }*/
+            if (pipeline.size() != 0)
+            {
+                cout << "Enter Pipe's index: ";
+                int id = GetCorrectNumber(findMaxID(pipeline));
+                if (pipeline.find(id) != pipeline.end())
+                {
+                    pipeline.erase(id);
+                }
+                else
+                {
+                    cout << "Id is not correct" << endl;
+                }
+            }
+            break;
+        }
+        case 9:
+        {
+            if (compress.size() != 0)
+            {
+                cout << "Enter Compression Station's index: ";
+                int id = GetCorrectNumber(findMaxID(compress));
+                if (compress.find(id) != compress.end())
+                {
+                    compress.erase(id);
+                }
+                else
+                {
+                    cout << "Id is not correct" << endl;
+                }
+            }
+            break;
+        }
         case 0:
         {
             return 0;
