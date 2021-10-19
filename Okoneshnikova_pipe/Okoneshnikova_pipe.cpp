@@ -14,7 +14,6 @@ template <typename T>
 void LoadAll(unordered_map <int, T>& map, int count, ifstream& fin)
 {
     vector <int> id;
-    /*vector.resize(0);*/  
     id.reserve(map.size());
     for (const auto& it : map)
     {
@@ -101,7 +100,11 @@ void PrintMenu()
          << "6. Input compression station" << endl
          << "7. Edit compression station" << endl
          << "8. Delete pipe" << endl
-         << "9. Delete cimoression station" << endl
+         << "9. Delete compression station" << endl
+         << "10. Find pipe by diam" << endl
+         << "11. Find pipe by needing in repair " << endl
+         << "12. Find compression station by name" << endl
+         << "13. Find compression station by percent of not working departments " << endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -128,6 +131,42 @@ void EditCompressionStation(unordered_map<int, CompressionStation>& g)
     }
 }
 
+template<typename P, typename T>
+using Filter = bool(*)(const P& p, T Param, bool paramb);
+
+bool CheckByName(const CompressionStation& cs, string name, bool paramb)
+{
+    return cs.getName() == name && paramb || cs.getName() != name && !paramb;
+}
+bool CheckByDisDep(const CompressionStation& cs, float ddep, bool paramb)
+{
+    return cs.getDisDep() >= ddep && paramb || (cs.getEff() < ddep) && !paramb ;
+}
+bool CheckByDiam(const Pipe& p, float diam, bool paramb)
+{
+    return p.getDiam() >= diam && paramb || p.getDiam() < diam && !paramb;
+}
+bool CheckByRepair(const Pipe& p, bool repair, bool paramb=true)
+{
+    return (!p.getRepair() && paramb)|| (p.getRepair() && !paramb);
+}
+
+template<typename P, typename T>
+vector<int> FindObjectsByFilter(const unordered_map<int, P>& map, Filter<P, T> f, T Param, bool paramb=true)
+{
+    vector <int> res;
+    int i = 0;
+    res.reserve(map.size());
+    for (const auto& it : map)
+    {
+        if (f(it.second, Param, paramb))
+        {
+            res.push_back(it.first);
+        }
+    }
+    return res;
+}
+
 int main()
 {
     unordered_map <int, CompressionStation> compress;
@@ -137,13 +176,11 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(9))
+        switch (GetCorrectNumber(13))
         {
         case 1:
         {
             cout << endl;
-           /* Pipe pl;
-            cin >> pl;*/
             pipeline.insert(pair <int, Pipe> (Pipe::MaxID+1, Pipe()));
             break;
         }
@@ -250,6 +287,34 @@ int main()
                     cout << "Id is not correct" << endl;
                 }
             }
+            break;
+        }
+        case 10:
+        {
+            float diam = 1420;
+
+            
+            break;
+        }
+        case 11:
+        {
+            if (pipeline.size() != 0)
+                cout << "Find pipes in repair(0) or not in repair(1)";
+            bool repair = GetCorrectNumber(1);
+            for (int& i: FindObjectsByFilter(pipeline, CheckByRepair, repair))
+            {
+                cout << pipeline[i];
+            }
+            break;
+        }
+        case 12:
+        {
+           
+            break;
+        }
+        case 13:
+        {
+            
             break;
         }
         case 0:

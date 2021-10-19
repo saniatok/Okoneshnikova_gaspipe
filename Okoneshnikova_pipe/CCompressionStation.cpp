@@ -107,6 +107,12 @@ float CompressionStation::getEff() const
     return eff;
 }
 
+int CompressionStation::getDisDep() const
+{
+    float ddep = workdep / dep * 100;
+    return ddep;
+}
+
 void CompressionStation::EditCS()
 {
     cout << "Launch(1) or stop(0) Compression Station's department: ";
