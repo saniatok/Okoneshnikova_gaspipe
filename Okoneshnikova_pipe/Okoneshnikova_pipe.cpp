@@ -9,7 +9,6 @@
 
 using namespace std;
 
-/*FIX THIS*/
 template <typename T>
 void LoadAll(unordered_map <int, T>& map, int count, ifstream& fin)
 {
@@ -63,31 +62,6 @@ bool Exist(size_t size)
     return true;
 };
 
-//int Empty(ifstream& File)   // https://www.cyberforum.ru/cpp-beginners/thread1983332.html
-//{
-//    int size = 0;   
-//    if (File.is_open())
-//    {
-//        File.seekg(0, std::ios::end);
-//        size = File.tellg();
-//        //File.seekg(0, std::ios::beg);
-//        if (size == 0)
-//            cout << endl << "No loading data" << endl;
-//        File.close();
-//    }
-//    return size;
-//}
-
-//void EditPipe(Pipe& p)
-//{
-//    p.Repair();
-//};
-
-//void EditCompressionStation(CompressionStation& cs)
-//{
-//    cs.EditCS();
-//};
-
 void PrintMenu()
 {
     cout << endl
@@ -104,7 +78,8 @@ void PrintMenu()
          << "10. Find pipe by diam" << endl
          << "11. Find pipe by needing in repair " << endl
          << "12. Find compression station by name" << endl
-         << "13. Find compression station by percent of not working departments " << endl
+         << "13. Find compression station by percent of working departments " << endl
+         << "14. Batch editing of pipes "<< endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -140,7 +115,8 @@ bool CheckByName(const CompressionStation& cs, string name, bool paramb)
 }
 bool CheckByDisDep(const CompressionStation& cs, float ddep, bool paramb)
 {
-    return cs.getDisDep() >= ddep && paramb || (cs.getEff() < ddep) && !paramb ;
+    float DisDep = cs.getWorkDep() / cs.getDep() * 100;
+    return DisDep >= ddep && paramb || DisDep < ddep && !paramb;
 }
 bool CheckByDiam(const Pipe& p, float diam, bool paramb)
 {
@@ -148,7 +124,7 @@ bool CheckByDiam(const Pipe& p, float diam, bool paramb)
 }
 bool CheckByRepair(const Pipe& p, bool repair, bool paramb=true)
 {
-    return (!p.getRepair() && paramb)|| (p.getRepair() && !paramb);
+    return (!p.getRepair() && repair)|| (p.getRepair() && !repair);
 }
 
 template<typename P, typename T>
@@ -176,7 +152,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(13))
+        switch (GetCorrectNumber(14))
         {
         case 1:
         {
@@ -291,30 +267,112 @@ int main()
         }
         case 10:
         {
-            float diam = 1420;
-
-            
+            if (pipeline.size() != 0)
+            {
+                cout << endl << "Find pipes whose diameter is more than : ";
+                float diam = GetCorrectNumber(10000);
+                for (int& i : FindObjectsByFilter(pipeline, CheckByDiam, diam))
+                {
+                    cout << endl << pipeline[i];
+                }
+            }
+            else
+                cout << endl << "Add data first" << endl;
             break;
         }
         case 11:
         {
             if (pipeline.size() != 0)
-                cout << "Find pipes in repair(0) or not in repair(1)";
-            bool repair = GetCorrectNumber(1);
-            for (int& i: FindObjectsByFilter(pipeline, CheckByRepair, repair))
             {
-                cout << pipeline[i];
+                cout << endl << "Find pipes in repair(1) or not in repair(0): ";
+                bool repair = GetCorrectNumber(1);
+                for (int& i: FindObjectsByFilter(pipeline, CheckByRepair, repair))
+                {
+                cout << endl << pipeline[i];
+                }
             }
+            else
+                cout << endl << "Add data first" << endl;
             break;
         }
         case 12:
         {
-           
+            if (compress.size() != 0)
+            {
+                cout << endl << "Find compression station with name: ";
+                string name;
+                cin.ignore(10000, '\n');
+                getline(cin, name);
+                for (int& i : FindObjectsByFilter(compress, CheckByName, name))
+                {
+                    cout << endl << compress[i];
+                }
+            }
+            else
+                cout << endl << "Add data first" << endl;
             break;
         }
-        case 13:
+        case 13: //FIX THIS
         {
-            
+            if (compress.size() != 0)
+            {
+                cout << endl << "Find compression station with percent of working departments: ";
+                float ddep = GetCorrectNumber(100);
+                for (int& i : FindObjectsByFilter(compress, CheckByDisDep, ddep))
+                {
+                    cout << endl << compress[i];
+                }
+            }
+            else 
+                cout << endl << "Add data first" << endl;
+            break;
+        } 
+        case 14:
+        {
+            if (pipeline.size() != 0)
+            {
+                    cout << endl << "Choose action: " << endl
+                        << "1. Edit chosen pipes " << endl
+                        << "2. Edit all pipes in repair" << endl
+                        << "3. Edit all pipes not in repair" << endl
+                        << "0. Exit batch editing of pipes" << endl
+                        << "Your action: ";
+                    switch (GetCorrectNumber(3))
+                    {
+                        /*case 1:
+                        {
+                            vector <int> IDv;
+                            cout << "Enter id of editing pipe: " << endl;
+                            int id = GetCorrectNumber(findMaxID(pipeline));
+                            if (pipeline.find(id) != pipeline.end())
+                            {
+                                IDv.push_back(id);
+                            }
+                            for (int& i : IDv)
+                            {
+                                cout << compress[i];
+                                compress[i].EditCS();
+                            }
+                            break;
+                        }*/
+                    case 2:
+                    {
+                        for (int& i : FindObjectsByFilter(pipeline, CheckByRepair, true))
+                        {
+                            pipeline[i].Repair();
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        for (int& i : FindObjectsByFilter(pipeline, CheckByRepair, false))
+                        {
+                            pipeline[i].Repair();
+                        }
+                        break;
+                    }
+                }
+            }
             break;
         }
         case 0:
