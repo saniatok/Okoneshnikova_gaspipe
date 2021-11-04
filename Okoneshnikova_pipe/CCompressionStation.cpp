@@ -107,10 +107,9 @@ float CompressionStation::getEff() const
     return eff;
 }
 
-int CompressionStation::getDisDep() const
+float CompressionStation::getDisDep() const
 {
-    float ddep = workdep / dep * 100;
-    return ddep;
+    return 100-(workdep * (1.0 / dep) * 100);
 }
 
 void CompressionStation::EditCS()

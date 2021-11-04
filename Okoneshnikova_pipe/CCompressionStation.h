@@ -21,8 +21,7 @@ public:
     int getDep() const;
     int getWorkDep() const;
     float getEff() const;
-
-    int getDisDep() const;
+    float getDisDep() const;
 
     CompressionStation();
     CompressionStation(std::ifstream& in);

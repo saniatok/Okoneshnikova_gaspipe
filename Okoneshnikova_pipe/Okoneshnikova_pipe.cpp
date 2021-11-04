@@ -62,28 +62,6 @@ bool Exist(size_t size)
     return true;
 };
 
-void PrintMenu()
-{
-    cout << endl
-         << "Choose action:" << endl
-         << "1. Input pipe" << endl
-         << "2. Edit pipe" << endl
-         << "3. Output pipes and compression stations" << endl
-         << "4. Save pipes and compression stations to file" << endl
-         << "5. Load pipes and compression stations from file" << endl
-         << "6. Input compression station" << endl
-         << "7. Edit compression station" << endl
-         << "8. Delete pipe" << endl
-         << "9. Delete compression station" << endl
-         << "10. Find pipe by diam" << endl
-         << "11. Find pipe by needing in repair " << endl
-         << "12. Find compression station by name" << endl
-         << "13. Find compression station by percent of working departments " << endl
-         << "14. Batch editing of pipes "<< endl
-         << "0. Exit" << endl
-         << "Your action: ";
-}
-
 void EditPipe(unordered_map<int, Pipe>& g)
 {
     cout << "Enter pipe's index: ";
@@ -106,6 +84,17 @@ void EditCompressionStation(unordered_map<int, CompressionStation>& g)
     }
 }
 
+template <typename T>
+void Erase(unordered_map <int, T>& map)
+{
+    cout << endl << "Enter index: ";
+    int id = GetCorrectNumber(findMaxID(map));
+    if (map.find(id) != map.end())
+    {
+        map.erase(id);
+    }
+}
+
 template<typename P, typename T>
 using Filter = bool(*)(const P& p, T Param, bool paramb);
 
@@ -115,20 +104,19 @@ bool CheckByName(const CompressionStation& cs, string name, bool paramb)
 }
 bool CheckByDisDep(const CompressionStation& cs, float ddep, bool paramb)
 {
-    float DisDep = cs.getWorkDep() / cs.getDep() * 100;
-    return DisDep >= ddep && paramb || DisDep < ddep && !paramb;
+    return cs.getDisDep() >= ddep && paramb || cs.getDisDep() < ddep && !paramb;
 }
 bool CheckByDiam(const Pipe& p, float diam, bool paramb)
 {
     return p.getDiam() >= diam && paramb || p.getDiam() < diam && !paramb;
 }
-bool CheckByRepair(const Pipe& p, bool repair, bool paramb=true)
+bool CheckByRepair(const Pipe& p, bool repair, bool paramb = true)
 {
-    return (!p.getRepair() && repair)|| (p.getRepair() && !repair);
+    return (!p.getRepair() && repair) || (p.getRepair() && !repair);
 }
 
 template<typename P, typename T>
-vector<int> FindObjectsByFilter(const unordered_map<int, P>& map, Filter<P, T> f, T Param, bool paramb=true)
+vector<int> FindObjectsByFilter(const unordered_map<int, P>& map, Filter<P, T> f, T Param, bool paramb = true)
 {
     vector <int> res;
     int i = 0;
@@ -141,6 +129,28 @@ vector<int> FindObjectsByFilter(const unordered_map<int, P>& map, Filter<P, T> f
         }
     }
     return res;
+}
+
+void PrintMenu()
+{
+    cout << endl
+         << "Choose action:" << endl
+         << "1. Input pipe" << endl
+         << "2. Edit pipe" << endl
+         << "3. Output pipes and compression stations" << endl
+         << "4. Save pipes and compression stations to file" << endl
+         << "5. Load pipes and compression stations from file" << endl
+         << "6. Input compression station" << endl
+         << "7. Edit compression station" << endl
+         << "8. Delete pipe" << endl
+         << "9. Delete compression station" << endl
+         << "10. Find pipe by diam" << endl
+         << "11. Find pipe by needing in repair " << endl
+         << "12. Find compression station by name" << endl
+         << "13. Find compression station by percent of working departments " << endl
+         << "14. Batch editing of pipes "<< endl
+         << "0. Exit" << endl
+         << "Your action: ";
 }
 
 int main()
@@ -235,16 +245,7 @@ int main()
         {
             if (pipeline.size() != 0)
             {
-                cout << "Enter Pipe's index: ";
-                int id = GetCorrectNumber(findMaxID(pipeline));
-                if (pipeline.find(id) != pipeline.end())
-                {
-                    pipeline.erase(id);
-                }
-                else
-                {
-                    cout << "Id is not correct" << endl;
-                }
+                Erase(pipeline);
             }
             break;
         }
@@ -252,16 +253,7 @@ int main()
         {
             if (compress.size() != 0)
             {
-                cout << "Enter Compression Station's index: ";
-                int id = GetCorrectNumber(findMaxID(compress));
-                if (compress.find(id) != compress.end())
-                {
-                    compress.erase(id);
-                }
-                else
-                {
-                    cout << "Id is not correct" << endl;
-                }
+                Erase(compress);
             }
             break;
         }
@@ -312,11 +304,11 @@ int main()
                 cout << endl << "Add data first" << endl;
             break;
         }
-        case 13: //FIX THIS
+        case 13:
         {
             if (compress.size() != 0)
             {
-                cout << endl << "Find compression station with percent of working departments: ";
+                cout << endl << "Find compression station with percent of not working departments: ";
                 float ddep = GetCorrectNumber(100);
                 for (int& i : FindObjectsByFilter(compress, CheckByDisDep, ddep))
                 {
@@ -339,22 +331,36 @@ int main()
                         << "Your action: ";
                     switch (GetCorrectNumber(3))
                     {
-                        /*case 1:
+                        case 1:
                         {
-                            vector <int> IDv;
-                            cout << "Enter id of editing pipe: " << endl;
-                            int id = GetCorrectNumber(findMaxID(pipeline));
-                            if (pipeline.find(id) != pipeline.end())
+                            vector <int> id_vector;
+                            bool editing = true;
+                            while (editing)
                             {
-                                IDv.push_back(id);
+                                cout << endl << "Enter id of editing pipe or 0 for stop editing: ";
+                                int id = GetCorrectNumber(findMaxID(pipeline));
+                                if (id != 0)
+                                {
+                                    if (pipeline.find(id) != pipeline.end())
+                                    {
+                                        id_vector.push_back(id);
+                                    }
+                                    else
+                                    {
+                                        cout << "Id is not correct" << endl;
+                                    }
+                                }
+                                else
+                                {
+                                    editing = false;
+                                }
                             }
-                            for (int& i : IDv)
+                            for (int& i : id_vector)
                             {
-                                cout << compress[i];
-                                compress[i].EditCS();
+                                pipeline[i].Repair();
                             }
                             break;
-                        }*/
+                        }
                     case 2:
                     {
                         for (int& i : FindObjectsByFilter(pipeline, CheckByRepair, true))
