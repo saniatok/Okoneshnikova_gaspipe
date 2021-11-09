@@ -44,10 +44,14 @@ void SaveAll(const unordered_map < int, Pipe>& pipeline, const unordered_map <in
         {
             fout << p.second;
         }
-        for (const auto& css : compress)
+        for (const auto& cs : compress)
         {
-            fout << css.second;
+            fout << cs.second;
         }
+    }
+    else
+    {
+        cout << endl << "No file with this name" << endl;
     }
     fout.close();
 };
@@ -211,6 +215,10 @@ int main()
                     fin >> countCS;
                     LoadAll(pipeline, countPipe, fin);
                     LoadAll(compress, countCS, fin);
+            }
+            else
+            {
+                cout << endl << "No file with this name" << endl;
             }
             fin.close();
             Pipe::MaxID = findMaxID(pipeline);
