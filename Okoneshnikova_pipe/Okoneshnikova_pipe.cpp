@@ -94,7 +94,14 @@ void Erase(unordered_map <int, T>& map)
 {
     cout << endl << "Enter index: ";
     int id = GetCorrectNumber(findMaxID(map));
+    if (map.find(id) != map.end())
+    {
         map.erase(id);
+    }
+    else
+    {
+        cout << endl << "This ID is not exist";
+    }
     
 }
 
@@ -239,7 +246,9 @@ int main()
         case 6:
         {
             cout << endl;
-            compress.insert(pair <int, CompressionStation> (CompressionStation::MaxID+1,CompressionStation()));
+            CompressionStation cs;
+            cin >> cs;
+            compress.insert(pair <int, CompressionStation> (cs.getId(), cs));
             break;
         }
         case 7:
@@ -253,7 +262,7 @@ int main()
         }
         case 8:
         {
-            if (pipeline.size() != 0)
+            if (Exist(pipeline.size()))
             {
                 Erase(pipeline);
             }
@@ -261,7 +270,7 @@ int main()
         }
         case 9:
         {
-            if (compress.size() != 0)
+            if (Exist(compress.size()))
             {
                 Erase(compress);
             }
@@ -269,7 +278,7 @@ int main()
         }
         case 10:
         {
-            if (pipeline.size() != 0)
+            if (Exist(pipeline.size()))
             {
                 cout << endl << "Find pipes whose diameter is more than : ";
                 float diam = GetCorrectNumber(10000);
@@ -278,13 +287,11 @@ int main()
                     cout << endl << pipeline[i];
                 }
             }
-            else
-                cout << endl << "Add data first" << endl;
             break;
         }
         case 11:
         {
-            if (pipeline.size() != 0)
+            if (Exist(pipeline.size()))
             {
                 cout << endl << "Find pipes in repair(1) or not in repair(0): ";
                 bool repair = GetCorrectNumber(1);
@@ -293,13 +300,11 @@ int main()
                 cout << endl << pipeline[i];
                 }
             }
-            else
-                cout << endl << "Add data first" << endl;
             break;
         }
         case 12:
         {
-            if (compress.size() != 0)
+            if (Exist(compress.size()))
             {
                 cout << endl << "Find compression station with name: ";
                 string name;
@@ -316,7 +321,7 @@ int main()
         }
         case 13:
         {
-            if (compress.size() != 0)
+            if (Exist(compress.size()))
             {
                 cout << endl << "Find compression station with percent of not working departments: ";
                 float ddep = GetCorrectNumber(100);
@@ -331,7 +336,7 @@ int main()
         } 
         case 14:
         {
-            if (pipeline.size() != 0)
+            if (Exist(pipeline.size()))
             {
                     cout << endl << "Choose action: " << endl
                         << "1. Edit chosen pipes " << endl
@@ -357,7 +362,7 @@ int main()
                                     }
                                     else
                                     {
-                                        cout << "Id is not correct" << endl;
+                                        cout << "ID is not correct" << endl;
                                     }
                                 }
                                 else

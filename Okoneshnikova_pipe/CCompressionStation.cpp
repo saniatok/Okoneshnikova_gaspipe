@@ -11,21 +11,11 @@ int CompressionStation::MaxID = 0;
 CompressionStation::CompressionStation()
 {
     this->id = ++MaxID;
-    cout << "Enter name of Compression Station: ";
-    cin.ignore();
-    getline(cin, this->name);
-    cout << "Enter number of Compression Station's departments: ";
-    this->dep = GetCorrectNumber(1000);
-    cout << "Enter number of Compression Station's working department: ";
-    this->workdep = GetCorrectNumber(dep);
-    cout << "Enter efficieny of Compression Station(0-1): ";
-    this->eff = GetCorrectNumber(1.0f);
 }
 
 CompressionStation::CompressionStation(std::ifstream& in)
 {
     in >> this->id;
-    in >> this->name;
     in.ignore();
     getline(in, this->name);
     in >> this->dep;
