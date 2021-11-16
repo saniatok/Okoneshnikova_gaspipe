@@ -10,11 +10,6 @@ int Pipe::MaxID = 0;
 Pipe::Pipe()
 {
     this->id = ++MaxID;
-    cout  << "Enter diameter of pipe: ";
-    this->diam = GetCorrectNumber(10000); 
-    cout << "Enter length of pipe: ";
-    this->length = GetCorrectNumber(100.0f);
-    this->in_repair = true;
 }
 
 Pipe::Pipe(std::ifstream& in)

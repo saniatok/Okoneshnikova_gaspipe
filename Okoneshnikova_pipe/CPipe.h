@@ -7,12 +7,12 @@ using namespace std;
 class Pipe
 {
     int id;
-
-public:
-    static int MaxID;
     int diam;
     float length;
     bool in_repair;
+
+public:
+    static int MaxID;
 
     int getId() const;
     int getDiam() const;

@@ -34,7 +34,8 @@ void SaveAll(const unordered_map < int, Pipe>& pipeline, const unordered_map <in
     ofstream fout;
     string file;
     cout << endl << "Enter name of file: ";
-    cin >> file;
+    cin.ignore(10000, '\n');
+    getline(cin, file);
     fout.open(file+".txt", ios::out);
     if (fout.is_open())
     {
@@ -93,10 +94,8 @@ void Erase(unordered_map <int, T>& map)
 {
     cout << endl << "Enter index: ";
     int id = GetCorrectNumber(findMaxID(map));
-    if (map.find(id) != map.end())
-    {
         map.erase(id);
-    }
+    
 }
 
 template<typename P, typename T>
@@ -171,7 +170,9 @@ int main()
         case 1:
         {
             cout << endl;
-            pipeline.insert(pair <int, Pipe> (Pipe::MaxID+1, Pipe()));
+            Pipe p;
+            cin >> p;
+            pipeline.insert(pair <int, Pipe> (p.getId(), p ));
             break;
         }
         case 3:
@@ -206,15 +207,16 @@ int main()
             ifstream fin;
             string file;
             cout << endl << "Enter name of file: ";
-            cin >> file;
+            cin.ignore(10000, '\n');
+            getline(cin, file);
             fin.open(file + ".txt", ios::out);
             if (fin.is_open())
             {
-                    int countPipe, countCS;
-                    fin >> countPipe;
-                    fin >> countCS;
-                    LoadAll(pipeline, countPipe, fin);
-                    LoadAll(compress, countCS, fin);
+                int countPipe, countCS;
+                fin >> countPipe;
+                fin >> countCS;
+                LoadAll(pipeline, countPipe, fin);
+                LoadAll(compress, countCS, fin);
             }
             else
             {

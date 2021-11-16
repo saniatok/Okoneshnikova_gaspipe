@@ -8,13 +8,13 @@ using namespace std;
 class CompressionStation
 {
     int id;
-
-public:
-    static int MaxID;
     string name;
     int dep;
     int workdep;
     float eff;
+public:
+    static int MaxID;
+
 
     int getId() const;
     string getName() const;
