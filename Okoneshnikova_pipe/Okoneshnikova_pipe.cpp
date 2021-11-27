@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "CCompressionStation.h"
 #include <string>
+#include "CNetwork.h"
 
 using namespace std;
 
@@ -159,6 +160,9 @@ void PrintMenu()
          << "12. Find compression station by name" << endl
          << "13. Find compression station by percent of working departments " << endl
          << "14. Batch editing of pipes "<< endl
+         << "15. Input gas transmission network  "<< endl
+         << "16. Output gas transmission network "<< endl
+         << "17. Topological sort of network "<< endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -167,12 +171,12 @@ int main()
 {
     unordered_map <int, CompressionStation> compress;
     unordered_map <int, Pipe> pipeline;
-
+    CNetwork net;
     while(1)
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(14))
+        switch (GetCorrectNumber(17))
         {
         case 1:
         {
@@ -394,6 +398,69 @@ int main()
                     }
                 }
             }
+            break;
+        }
+        case 15:
+        {
+            if (compress.size() >= 2 && !pipeline.empty())
+            {
+                cout << "Compression Stations to choose:" << endl;
+                for (auto& cs : compress)
+                {
+                    cout << cs.first << endl;
+                }
+                cout << endl << "Enter id of first compression station: ";
+                int Id_FCS = GetCorrectNumber(findMaxID(compress));
+                cout << endl << "Enter id of second compression station: ";
+                int Id_SCS = GetCorrectNumber(findMaxID(compress));
+                cout << "Pipes to choose:" << endl;
+                for (auto& p : pipeline)
+                {
+                    if (p.second.getRepair() && !net.HasEdge(p.first))
+                    {
+                        cout << p.first << endl;
+                    }
+                }
+                cout << "Enter id of pipe: " << endl;
+                int Id_P = GetCorrectNumber(findMaxID(pipeline));
+                auto it = pipeline.find(Id_P);
+                if (it->second.getRepair() && !net.HasEdge(it->first))
+                {
+                    cout << "Is pipe comes from first Compression Station to second? yes(1) or no(0)  " << endl;
+                    bool is_one_step = GetCorrectNumber(1);
+                    net.Connect(Id_FCS, Id_SCS, Id_P, it->second.getPressure(), it->second.getPerformance(), is_one_step);
+                }
+                else
+                {
+                    cout << "This pipe is in repair now, choose another pipe" << endl;
+                }
+           }
+            break;
+        }
+        case 17:
+        {
+            auto t_sort = net.TopologicalSort();
+            for (unsigned int i = 0; i < t_sort.size(); i++)
+            {
+                cout << i + 1 << "/t" << t_sort[i] << endl;
+            }
+            if (!t_sort.empty())
+            {
+                for (int i : t_sort)
+                {
+                    cout << compress[i];
+                }
+
+            }
+            else
+            {
+                cout << "Graph has cycle" << endl;
+            }
+            break;
+        }
+        case 16:
+        {
+            //cout << net;
             break;
         }
         case 0:

@@ -85,6 +85,16 @@ bool Pipe::getRepair() const
     return in_repair;
 }
 
+bool Pipe::getPressure() const
+{
+    return length* 1.0/diam;
+}
+
+bool Pipe::getPerformance() const
+{
+    return diam* 1.0/length;
+}
+
 
 void Pipe::Repair()
 {

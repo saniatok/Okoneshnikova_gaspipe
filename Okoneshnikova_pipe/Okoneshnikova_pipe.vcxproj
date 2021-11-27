@@ -142,10 +142,12 @@
     <ClCompile Include="CCompressionStation.cpp" />
     <ClCompile Include="CPipe.cpp" />
     <ClCompile Include="Okoneshnikova_pipe.cpp" />
+    <ClCompile Include="CNetwork.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCompressionStation.h" />
     <ClInclude Include="CPipe.h" />
+    <ClInclude Include="CNetwork.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

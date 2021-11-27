@@ -3,6 +3,14 @@
 #include <unordered_map>
 
 template <typename T>
+void swapValues(T& value1, T& value2)
+{
+    T temp = value1;
+    value1 = value2;
+    value2 = temp;
+}
+
+template <typename T>
 T GetCorrectNumber(T max)
 {
     T x;
@@ -27,4 +35,5 @@ int findMaxID(unordered_map<int, T>& map)
         }
     }
     return MaxID;
-}
+};
+
