@@ -404,35 +404,43 @@ int main()
         {
             if (compress.size() >= 2 && !pipeline.empty())
             {
-                cout << "Compression Stations to choose:" << endl;
+                cout << endl << "Compression Stations to choose:" << endl;
                 for (auto& cs : compress)
                 {
                     cout << cs.first << endl;
                 }
-                cout << endl << "Enter id of first compression station: ";
+                cout << endl << "Enter id of first compression station or 0 for exit: ";
                 int Id_FCS = GetCorrectNumber(findMaxID(compress));
-                cout << endl << "Enter id of second compression station: ";
+                cout << endl << "Enter id of second compression station or 0 for exit: ";
                 int Id_SCS = GetCorrectNumber(findMaxID(compress));
-                cout << "Pipes to choose:" << endl;
-                for (auto& p : pipeline)
+                if (Id_FCS != 0 && Id_SCS != 0)
                 {
-                    if (p.second.getRepair() && !net.HasEdge(p.first))
+                    cout << endl << "Pipes to choose:" << endl;
+                    for (auto& p : pipeline)
                     {
-                        cout << p.first << endl;
+                        if (p.second.getRepair() && !net.HasEdge(p.first))
+                        {
+                            cout << p.first << endl;
+                        }
                     }
-                }
-                cout << "Enter id of pipe: " << endl;
-                int Id_P = GetCorrectNumber(findMaxID(pipeline));
-                auto it = pipeline.find(Id_P);
-                if (it->second.getRepair() && !net.HasEdge(it->first))
-                {
-                    cout << "Is pipe comes from first Compression Station to second? yes(1) or no(0)  " << endl;
-                    bool is_one_step = GetCorrectNumber(1);
-                    net.Connect(Id_FCS, Id_SCS, Id_P, it->second.getPressure(), it->second.getPerformance(), is_one_step);
-                }
-                else
-                {
-                    cout << "This pipe is in repair now, choose another pipe" << endl;
+                    cout << endl << "Enter id of pipe or 0 to exit: " << endl;
+                    int Id_P = GetCorrectNumber(findMaxID(pipeline));
+                    if (Id_P != 0)
+                    {
+                        auto it = pipeline.find(Id_P);
+                        if (it->second.getRepair() && !net.HasEdge(it->first))
+                        {
+                            net.Connect(Id_FCS, Id_SCS, Id_P, it->second.getPressure(), it->second.getPerformance()/*, is_one_step*/);
+                        }
+                        else
+                        {
+                            cout << "This pipe is in repair now, choose another pipe" << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "No available pipes";
+                    }
                 }
            }
             break;
@@ -440,17 +448,17 @@ int main()
         case 17:
         {
             auto t_sort = net.TopologicalSort();
+            cout << endl;
             for (unsigned int i = 0; i < t_sort.size(); i++)
             {
-                cout << i + 1 << "/t" << t_sort[i] << endl;
+                cout << i + 1 << "    " << t_sort[i] << endl;
             }
             if (!t_sort.empty())
             {
-                for (int i : t_sort)
-                {
-                    cout << compress[i];
-                }
-
+                    for (int i : t_sort)
+                    {
+                        cout << compress[i] << endl;
+                    }
             }
             else
             {
@@ -460,7 +468,7 @@ int main()
         }
         case 16:
         {
-            //cout << net;
+            cout << endl << net << endl;
             break;
         }
         case 0:

@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <map>
 #include <stack>
+#include <iostream>
 
 using namespace std;
 
@@ -22,14 +23,20 @@ class CNetwork
 		int EndVertexId;
 		int EdgeId;
 		bool is_directed;
+		double Capacity;
+		double Weight;
 
 	};
 
 public:
-	void Connect(int idVer1, int idVer2, int idEdge, double Weight, double Capacity, bool is_one_step=true);
+	void Connect(int idVer1, int idVer2, int idEdge, double Weight=1.0, double Capacity=1.0, bool is_one_step=true);
 	bool HasEdge(int Id) const;
-	bool HasVertex(int Id) const;
 	vector<int> TopologicalSort() const;
+	friend ostream& operator << (ostream& out, const CNetwork& N);
+	friend std::istream& operator >> (std::istream& in, CNetwork& N);
+	/*friend std::ifstream& operator >> (std::ifstream& fin, CNetwork& N);
+	friend std::ofstream& operator << (std::ofstream& fout, const CNetwork& N);*/
+
 private:
 	CNetwork::Vertex AddVertex(int ownId);
 	CNetwork::Edge AddEdge(int startId, int ownId, int endId, double Weight, double Capacity, bool is_directed, bool StartToEnd);
@@ -38,4 +45,5 @@ private:
 	vector <int> GetAdjacent(int Id) const;
 	map <int, Vertex> mapVertex;
 	unordered_map <int, Edge> mapEdge;
+	bool HasVertex(int Id) const;
 };
