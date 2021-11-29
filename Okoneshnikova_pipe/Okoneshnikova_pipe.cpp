@@ -163,6 +163,8 @@ void PrintMenu()
          << "15. Input gas transmission network  "<< endl
          << "16. Output gas transmission network "<< endl
          << "17. Topological sort of network "<< endl
+         << "18. Save network to file"<< endl
+         << "19. Load network from file"<< endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -176,7 +178,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(17))
+        switch (GetCorrectNumber(19))
         {
         case 1:
         {
@@ -469,6 +471,44 @@ int main()
         case 16:
         {
             cout << endl << net << endl;
+            break;
+        }
+        case 18:
+        {
+            ofstream fout;
+            string file;
+            cout << endl << "Enter name of file: ";
+            cin.ignore(10000, '\n');
+            getline(cin, file);
+            fout.open(file + ".txt", ios::out);
+            if (fout.is_open())
+            {
+                fout << net;
+            }
+            else
+            {
+                cout << endl << "No file with this name" << endl;
+            }
+            fout.close();
+            break;
+        }
+        case 19:
+        {
+            ifstream fin;
+            string file;
+            cout << endl << "Enter name of file: ";
+            cin.ignore(10000, '\n');
+            getline(cin, file);
+            fin.open(file + ".txt", ios::out);
+            if (fin.is_open())
+            {
+                fin >> net;
+            }
+            else
+            {
+                cout << endl << "No file with this name" << endl;
+            }
+            fin.close();
             break;
         }
         case 0:

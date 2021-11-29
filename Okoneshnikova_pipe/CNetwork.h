@@ -4,6 +4,7 @@
 #include <map>
 #include <stack>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -34,8 +35,8 @@ public:
 	vector<int> TopologicalSort() const;
 	friend ostream& operator << (ostream& out, const CNetwork& N);
 	friend std::istream& operator >> (std::istream& in, CNetwork& N);
-	/*friend std::ifstream& operator >> (std::ifstream& fin, CNetwork& N);
-	friend std::ofstream& operator << (std::ofstream& fout, const CNetwork& N);*/
+	friend std::ifstream& operator >> (std::ifstream& fin, CNetwork& N);
+	friend std::ofstream& operator << (std::ofstream& fout, const CNetwork& N);
 
 private:
 	CNetwork::Vertex AddVertex(int ownId);

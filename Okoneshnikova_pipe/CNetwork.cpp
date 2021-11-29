@@ -293,3 +293,43 @@ std::istream& operator>>(std::istream& in, CNetwork& N)
     return in;
 }
 
+ifstream& operator>>(ifstream& fin, CNetwork& N)
+{
+    N.mapEdge.clear();
+    N.mapVertex.clear();
+    int size = 0;
+    fin >> size;
+    while (size--)
+    {
+        int EdgeId = 0, StartVertexId = 0, EndVertexId = 0;
+        bool is_directed = true;
+        double Weight = 0.0, Capacity = 0.0;
+        fin >> EdgeId;
+        fin >> StartVertexId;
+        fin >> EndVertexId;
+        fin >> is_directed;
+        fin >> Weight;
+        fin >> Capacity;
+        if (is_directed)
+        {
+            N.Connect(StartVertexId, EndVertexId, EdgeId, Weight, Capacity);
+        }
+    }
+    return fin;
+}
+
+ofstream& operator<<(ofstream& fout, const CNetwork& N)
+{
+    fout << N.mapEdge.size() << endl;
+    for (auto& e : N.mapEdge)
+    {
+        fout << e.second.EdgeId << endl;
+        fout << e.second.StartVertexId << endl;
+        fout << e.second.EndVertexId << endl;
+        fout << e.second.is_directed << endl;
+        fout << e.second.Weight << endl;
+        fout << e.second.Capacity << endl;
+    }
+    return fout;
+}
+
