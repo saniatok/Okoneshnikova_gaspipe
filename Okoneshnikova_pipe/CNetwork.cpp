@@ -153,6 +153,44 @@ vector<int> CNetwork::TopologicalSort() const
     }
 }
 
+void CNetwork::DeleteVertex(int id)
+{
+    if (HasVertex(id))
+    {
+        auto it = mapVertex.find(id);
+        std::vector<int> IdsForDelete;
+        IdsForDelete.reserve(it->second.EdgeIds.size());
+        for (int id : it->second.EdgeIds)
+        {
+            IdsForDelete.push_back(id);
+        }
+        for (int id : IdsForDelete)
+        {
+            DeleteEdge(id);
+        }
+        mapVertex.erase(it);
+    }
+    else
+    {
+        cout << endl <<"No Vertex ";
+    }
+}
+
+void CNetwork::DeleteEdge(int id)
+{
+    if (HasEdge(id))
+    {
+        auto it = mapEdge.find(id);
+        mapVertex[it->second.StartVertexId].EdgeIds.erase(id);
+        mapVertex[it->second.EndVertexId].EdgeIds.erase(id);
+        mapEdge.erase(id);
+    }
+    else
+    {
+        cout<< endl<<"No Edge ";
+    }
+}
+
 CNetwork::Vertex CNetwork::AddVertex(int ownId)
 {
     Vertex v;
@@ -324,7 +362,7 @@ ofstream& operator<<(ofstream& fout, const CNetwork& N)
     for (auto& e : N.mapEdge)
     {
         fout << e.second.EdgeId << endl;
-        fout << e.second.StartVertexId << endl;
+        fout << e.second.StartVertexId << endl; 
         fout << e.second.EndVertexId << endl;
         fout << e.second.is_directed << endl;
         fout << e.second.Weight << endl;

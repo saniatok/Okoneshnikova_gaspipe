@@ -33,6 +33,8 @@ public:
 	void Connect(int idVer1, int idVer2, int idEdge, double Weight=1.0, double Capacity=1.0, bool is_one_step=true);
 	bool HasEdge(int Id) const;
 	vector<int> TopologicalSort() const;
+	void DeleteVertex(int id);
+	void DeleteEdge(int id);
 	friend ostream& operator << (ostream& out, const CNetwork& N);
 	friend std::istream& operator >> (std::istream& in, CNetwork& N);
 	friend std::ifstream& operator >> (std::ifstream& fin, CNetwork& N);

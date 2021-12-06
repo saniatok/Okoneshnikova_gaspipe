@@ -165,6 +165,8 @@ void PrintMenu()
          << "17. Topological sort of network "<< endl
          << "18. Save network to file"<< endl
          << "19. Load network from file"<< endl
+         << "20. Delete vertex from network"<< endl
+         << "21. Delete edge fron network"<< endl
          << "0. Exit" << endl
          << "Your action: ";
 }
@@ -178,7 +180,7 @@ int main()
     { 
         PrintMenu();
         
-        switch (GetCorrectNumber(19))
+        switch (GetCorrectNumber(21))
         {
         case 1:
         {
@@ -509,6 +511,18 @@ int main()
                 cout << endl << "No file with this name" << endl;
             }
             fin.close();
+            break;
+        }
+        case 20:
+        {
+            cout << endl << "Enter id of compressor station to delete: ";
+            net.DeleteVertex(GetCorrectNumber(findMaxID(compress)));
+            break;
+        }
+        case 21:
+        {
+            cout << endl << "Enter id of pipeline to delete: " ;
+            net.DeleteEdge(GetCorrectNumber(findMaxID(pipeline)));
             break;
         }
         case 0:
