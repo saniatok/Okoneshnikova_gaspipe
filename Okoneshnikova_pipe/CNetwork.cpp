@@ -63,8 +63,8 @@ bool CNetwork::HasVertex(int Id) const
 bool CNetwork::is_cycled() const
 {
     map<int, Vertex> workmap = mapVertex;
-
     stack <int> stackvert;
+
     for (const pair<const int, Vertex>& it : mapVertex)
     {
         workmap = mapVertex;
