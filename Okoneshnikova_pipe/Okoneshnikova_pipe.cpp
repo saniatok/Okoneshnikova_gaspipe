@@ -142,14 +142,111 @@ vector<int> FindObjectsByFilter(const unordered_map<int, P>& map, Filter<P, T> f
     return res;
 }
 
-//void InputNetwork(size_t size_pl, size_t size_cs)
-//{
-//
-//}
+void InputNetwork(unordered_map < int, Pipe>& pipeline, unordered_map <int, CompressionStation>& compress, CNetwork net)
+{
+    cout << endl << "Compression Stations to choose:" << endl;
+    for (auto& cs : compress)
+    {
+        cout << cs.first << endl;
+    }
+    cout << endl << "Enter id of first compression station or 0 for exit: ";
+    int Id_FCS = GetCorrectNumber(findMaxID(compress));
+    cout << endl << "Enter id of second compression station or 0 for exit: ";
+    int Id_SCS = GetCorrectNumber(findMaxID(compress));
+    if (Id_FCS != 0 && Id_SCS != 0)
+    {
+        cout << endl << "Pipes to choose:" << endl;
+        for (auto& p : pipeline)
+        {
+            if (p.second.getRepair() && !net.HasEdge(p.first))
+            {
+                cout << p.first << endl;
+            }
+        }
+        cout << endl << "Enter id of pipe or 0 to exit: ";
+        int Id_P = GetCorrectNumber(findMaxID(pipeline));
+        if (Id_P != 0)
+        {
+            auto it = pipeline.find(Id_P);
+            if (it->second.getRepair() && !net.HasEdge(it->first))
+            {
+                net.Connect(Id_FCS, Id_SCS, Id_P, it->second.getPressure(), it->second.getPerformance()/*, is_one_step*/);
+            }
+            else
+            {
+                cout << "This pipe is in repair now, choose another pipe" << endl;
+            }
+        }
+        else
+        {
+            cout << "No available pipes";
+        }
+    }
+}
+
+void PrintTopologicalSort(unordered_map <int, CompressionStation>& compress, CNetwork net)
+{
+    auto t_sort = net.TopologicalSort();
+    cout << endl << "h" << "    " << "CS id" << endl;
+    for (unsigned int i = 0; i < t_sort.size(); i++)
+    {
+        cout << i + 1 << "    " << t_sort[i] << endl;
+    }
+    if (!t_sort.empty())
+    {
+        for (int i : t_sort)
+        {
+            cout << compress[i] << endl;
+        }
+    }
+    else
+    {
+        cout << "Graph has cycle" << endl;
+    }
+}
+
+void SaveNet(CNetwork net)
+{
+    ofstream fout;
+    string file;
+    cout << endl << "Enter name of file: ";
+    cin.ignore(10000, '\n');
+    getline(cin, file);
+    fout.open(file + ".txt", ios::out);
+    if (fout.is_open())
+    {
+        fout << net;
+    }
+    else
+    {
+        cout << endl << "No file with this name" << endl;
+    }
+    fout.close();
+}
+
+void LoadNet(CNetwork net)
+{
+    ifstream fin;
+    string file;
+    cout << endl << "Enter name of file: ";
+    cin.ignore(10000, '\n');
+    getline(cin, file);
+    fin.open(file + ".txt", ios::out);
+    if (fin.is_open())
+    {
+        fin >> net;
+    }
+    else
+    {
+        cout << endl << "No file with this name" << endl;
+    }
+    fin.close();
+}
 
 void PrintMenu()
 {
     cout << endl
+         << "MAIN MENU" << endl
          << "Choose action:" << endl
          << "1. Input pipe" << endl
          << "2. Edit pipe" << endl
@@ -173,6 +270,8 @@ void PrintMenu()
 void PrintNetwork()
 {
     cout << endl 
+        <<"NETWORK MENU"<< endl
+        <<"Choose action:"<< endl
         << "1. Input gas transmission network  " << endl
         << "2. Output gas transmission network " << endl
         << "3. Topological sort of network " << endl
@@ -181,6 +280,17 @@ void PrintNetwork()
         << "6. Delete vertex from network" << endl
         << "7. Delete edge fron network" << endl
         << "0. Exit from Network" << endl
+        << "Your action: ";
+}
+void PrintEditingPipe()
+{ 
+   cout << endl
+        << "BATCH EDITING OF PIPES MENU " << endl
+        << "Choose action: " << endl
+        << "1. Edit chosen pipes " << endl
+        << "2. Edit all pipes in repair" << endl
+        << "3. Edit all pipes not in repair" << endl
+        << "0. Exit batch editing of pipes" << endl
         << "Your action: ";
 }
 
@@ -336,8 +446,6 @@ int main()
                     cout << endl << compress[i];
                 }
             }
-            else
-                cout << endl << "Add data first" << endl;
             break;
         }
         case 13:
@@ -351,20 +459,13 @@ int main()
                     cout << endl << compress[i];
                 }
             }
-            else 
-                cout << endl << "Add data first" << endl;
             break;
         } 
         case 14:
         {
             if (Exist(pipeline.size()))
             {
-                    cout << endl << "Choose action: " << endl
-                        << "1. Edit chosen pipes " << endl
-                        << "2. Edit all pipes in repair" << endl
-                        << "3. Edit all pipes not in repair" << endl
-                        << "0. Exit batch editing of pipes" << endl
-                        << "Your action: ";
+                PrintEditingPipe();
                     switch (GetCorrectNumber(3))
                     {
                         case 1:
@@ -419,131 +520,62 @@ int main()
         }
         case 15:
         {
-            PrintNetwork();
-
-            switch (GetCorrectNumber(7))
+            if (compress.size() >= 2 && !pipeline.empty())
             {
-            case 1:
-            {
-                if (compress.size() >= 2 && !pipeline.empty())
+                bool net_menu = true;
+                while (net_menu)
                 {
-                    cout << endl << "Compression Stations to choose:" << endl;
-                    for (auto& cs : compress)
+                    PrintNetwork();
+                    switch (GetCorrectNumber(7))
                     {
-                        cout << cs.first << endl;
+                    case 1:
+                    {
+                        InputNetwork(pipeline, compress, net);
+                        break;
                     }
-                    cout << endl << "Enter id of first compression station or 0 for exit: ";
-                    int Id_FCS = GetCorrectNumber(findMaxID(compress));
-                    cout << endl << "Enter id of second compression station or 0 for exit: ";
-                    int Id_SCS = GetCorrectNumber(findMaxID(compress));
-                    if (Id_FCS != 0 && Id_SCS != 0)
+                    case 2:
                     {
-                        cout << endl << "Pipes to choose:" << endl;
-                        for (auto& p : pipeline)
-                        {
-                            if (p.second.getRepair() && !net.HasEdge(p.first))
-                            {
-                                cout << p.first << endl;
-                            }
-                        }
-                        cout << endl << "Enter id of pipe or 0 to exit: ";
-                        int Id_P = GetCorrectNumber(findMaxID(pipeline));
-                        if (Id_P != 0)
-                        {
-                            auto it = pipeline.find(Id_P);
-                            if (it->second.getRepair() && !net.HasEdge(it->first))
-                            {
-                                net.Connect(Id_FCS, Id_SCS, Id_P, it->second.getPressure(), it->second.getPerformance()/*, is_one_step*/);
-                            }
-                            else
-                            {
-                                cout << "This pipe is in repair now, choose another pipe" << endl;
-                            }
-                        }
-                        else
-                        {
-                            cout << "No available pipes";
-                        }
+                        cout << endl << net << endl;
+                        break;
                     }
-                }
-                break;
-            }
-            case 2:
-            {
-                auto t_sort = net.TopologicalSort();
-                cout << endl << "h" << "    " << "CS id" << endl;
-                for (unsigned int i = 0; i < t_sort.size(); i++)
-                {
-                    cout << i + 1 << "    " << t_sort[i] << endl;
-                }
-                if (!t_sort.empty())
-                {
-                    for (int i : t_sort)
+                    case 3:
                     {
-                        cout << compress[i] << endl;
+                        PrintTopologicalSort(compress, net);
+                        break;
+                    }
+                    case 4:
+                    {
+                        SaveNet(net);
+                        break;
+                    }
+                    case 5:
+                    {
+                        LoadNet(net);
+                        break;
+                    }
+                    case 6:
+                    {
+                        cout << endl << "Enter id of compressor station to delete: ";
+                        net.DeleteVertex(GetCorrectNumber(findMaxID(compress)));
+                        break;
+                    }
+                    case 7:
+                    {
+                        cout << endl << "Enter id of pipeline to delete: ";
+                        net.DeleteEdge(GetCorrectNumber(findMaxID(pipeline)));
+                        break;
+                    }
+                    case 0:
+                    {
+                        net_menu = false;
+                        break;
+                    }
                     }
                 }
-                else
-                {
-                    cout << "Graph has cycle" << endl;
-                }
-                break;
             }
-            case 3:
+            else
             {
-                cout << endl << net << endl;
-                break;
-            }
-            case 4:
-            {
-                ofstream fout;
-                string file;
-                cout << endl << "Enter name of file: ";
-                cin.ignore(10000, '\n');
-                getline(cin, file);
-                fout.open(file + ".txt", ios::out);
-                if (fout.is_open())
-                {
-                    fout << net;
-                }
-                else
-                {
-                    cout << endl << "No file with this name" << endl;
-                }
-                fout.close();
-                break;
-            }
-            case 5:
-            {
-                ifstream fin;
-                string file;
-                cout << endl << "Enter name of file: ";
-                cin.ignore(10000, '\n');
-                getline(cin, file);
-                fin.open(file + ".txt", ios::out);
-                if (fin.is_open())
-                {
-                    fin >> net;
-                }
-                else
-                {
-                    cout << endl << "No file with this name" << endl;
-                }
-                fin.close();
-                break;
-            }
-            case 6:
-            {
-                cout << endl << "Enter id of compressor station to delete: ";
-                net.DeleteVertex(GetCorrectNumber(findMaxID(compress)));
-                break;
-            }
-            case 7:
-            {
-                cout << endl << "Enter id of pipeline to delete: ";
-                net.DeleteEdge(GetCorrectNumber(findMaxID(pipeline)));
-                break;
-            }
+                Exist(0);
             }
             break;
         }
