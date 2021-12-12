@@ -12,7 +12,7 @@ Pipe::Pipe()
     this->id = ++MaxID;
 }
 
-Pipe::Pipe(std::ifstream& in)
+Pipe::Pipe(ifstream& in)
 {
     in >> this->id;
     in >> this->diam;
@@ -33,6 +33,7 @@ ostream& operator << (ostream& out, const Pipe& p)
     {
         out << "This pipe in repair." << endl;
     }
+    out << endl;
     return out;
 }
 
@@ -42,11 +43,11 @@ istream& operator >> (istream& in, Pipe& p)
     p.diam = GetCorrectNumber(10000);
     cout << "Enter length of pipe: ";
     p.length = GetCorrectNumber(100.0f);
-    cout << endl;
+    p.in_repair = true;
     return in;
 }
 
-ofstream& operator<<(ofstream& fout, const Pipe& p)
+ofstream& operator << (ofstream& fout, const Pipe& p)
 {
     fout << endl
          << p.id << endl 
@@ -56,7 +57,7 @@ ofstream& operator<<(ofstream& fout, const Pipe& p)
     return fout;
 }
 
-ifstream& operator>>(ifstream& fin, Pipe& p)
+ifstream& operator >> (ifstream& fin, Pipe& p)
 {
     fin >> p.id;
     fin >> p.diam;

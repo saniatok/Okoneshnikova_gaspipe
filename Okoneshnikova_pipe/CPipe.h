@@ -22,7 +22,7 @@ public:
     bool getPerformance() const;
 
     Pipe();
-    Pipe(std::ifstream& in);
+    Pipe(ifstream& in);
     void Repair();
 
     friend ostream& operator << (ostream& out, const Pipe& p);

@@ -13,7 +13,7 @@ CompressionStation::CompressionStation()
     this->id = ++MaxID;
 }
 
-CompressionStation::CompressionStation(std::ifstream& in)
+CompressionStation::CompressionStation(ifstream& in)
 {
     in >> this->id;
     in.ignore();
@@ -29,13 +29,13 @@ ostream& operator<<(ostream& out, const CompressionStation& cs)
         << "Compression Station's name: " << cs.name << endl
         << "Compression Station's departments: " << cs.dep << endl
         << "Compression Station's working departments: " << cs.workdep << endl
-        << "Compression Station's efficiency: " << cs.eff << endl;
+        << "Compression Station's efficiency: " << cs.eff << endl
+        << endl;
     return out;
 }
 
 istream& operator>>(istream& in, CompressionStation& cs)
 {
-    
     cout << "Enter name of Compression Station: ";
     cin.ignore(10000, '\n');
     getline(cin, cs.name);
@@ -43,9 +43,9 @@ istream& operator>>(istream& in, CompressionStation& cs)
     cs.dep = GetCorrectNumber(1000);
     cout << "Enter number of Compression Station's working departments: ";
     cs.workdep = GetCorrectNumber(cs.dep);
-    cout << "Enter efficieny of Compression Station(0-1): ";
+    cout << "Enter efficiency of Compression Station(0-1): ";
     cs.eff = GetCorrectNumber(1.0f);
-    cout << " " << endl;
+    cout << endl;
     return in;
 }
 
@@ -115,7 +115,7 @@ void CompressionStation::EditCS()
         }
         else
         {
-            cout << endl << "excess of permissible count of departments" << endl;
+            cout << endl << "Excess of permissible count of departments" << endl;
         }
         break;
     }
@@ -127,7 +127,7 @@ void CompressionStation::EditCS()
         }
         else
         {
-            cout << endl << "count of working departments can't be less than 0" << endl;
+            cout << endl << "Count of working departments can't be less than 0" << endl;
         }
         break;
     }

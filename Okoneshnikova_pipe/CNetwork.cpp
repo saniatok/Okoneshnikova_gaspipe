@@ -287,7 +287,7 @@ ostream& operator<<(ostream& out, const CNetwork& N)
     {
         for (unsigned int j = 0; j < matrix[i].size(); j++)
         {
-            cout << matrix[i][j] << "\t";
+            cout << matrix[i][j] << "|" << "\t";
         }
         cout << endl;
     }

@@ -19,10 +19,6 @@ void LoadAll(unordered_map <int, T>& map, int count, ifstream& fin)
     {
         id.push_back(it.first);
     }
-    for (int i : id)
-    {
-        map.erase(i);
-    }
     while (count--)
     {
         T val(fin);
@@ -187,19 +183,12 @@ void InputNetwork(unordered_map < int, Pipe>& pipeline, unordered_map <int, Comp
 void PrintTopologicalSort(unordered_map <int, CompressionStation>& compress, CNetwork net)
 {
     auto t_sort = net.TopologicalSort();
-    cout << endl << "h" << "    " << "CS id" << endl;
+    cout << endl << "h" <<  "\t" << "CS id" << endl;
     for (unsigned int i = 0; i < t_sort.size(); i++)
     {
-        cout << i + 1 << "    " << t_sort[i] << endl;
+        cout << i + 1 <<  "\t" << t_sort[i] << endl;
     }
-    if (!t_sort.empty())
-    {
-        for (int i : t_sort)
-        {
-            cout << compress[i] << endl;
-        }
-    }
-    else
+    if (t_sort.empty())
     {
         cout << "Graph has cycle" << endl;
     }
@@ -222,25 +211,6 @@ void SaveNet(CNetwork net)
         cout << endl << "No file with this name" << endl;
     }
     fout.close();
-}
-
-void LoadNet(CNetwork net)
-{
-    ifstream fin;
-    string file;
-    cout << endl << "Enter name of file: ";
-    cin.ignore(10000, '\n');
-    getline(cin, file);
-    fin.open(file + ".txt", ios::out);
-    if (fin.is_open())
-    {
-        fin >> net;
-    }
-    else
-    {
-        cout << endl << "No file with this name" << endl;
-    }
-    fin.close();
 }
 
 void PrintMenu()
@@ -318,14 +288,19 @@ int main()
             cout << endl;
             if (pipeline.size() != 0 || compress.size() != 0)
             {
-                for (const pair <int, Pipe>& pl:pipeline )
+                for (const pair<const int, Pipe>& pl : pipeline)
+                {
                     cout << pl.second << endl;
-                cout << endl;
-                for (const pair <int, CompressionStation>& css : compress)
+                }
+                for (const pair<const int, CompressionStation>& css : compress)
+                {
                     cout << css.second << endl;
+                }
             }
             else
+            {
                 cout << "No data to output" << endl;
+            }
             break;
         }
         case 4:
@@ -344,10 +319,12 @@ int main()
         {
             ifstream fin;
             string file;
+            pipeline.clear();
+            compress.clear();
             cout << endl << "Enter name of file: ";
             cin.ignore(10000, '\n');
             getline(cin, file);
-            fin.open(file + ".txt", ios::out);
+            fin.open(file + ".txt", ios::in);
             if (fin.is_open())
             {
                 int countPipe, countCS;
@@ -550,7 +527,21 @@ int main()
                     }
                     case 5:
                     {
-                        LoadNet(net);
+                        ifstream fin;
+                        string file;
+                        cout << endl << "Enter name of file: ";
+                        cin.ignore(10000, '\n');
+                        getline(cin, file);
+                        fin.open(file + ".txt", ios::out);
+                        if (fin.is_open())
+                        {
+                            fin >> net;
+                        }
+                        else
+                        {
+                            cout << endl << "No file with this name" << endl;
+                        }
+                        fin.close();
                         break;
                     }
                     case 6:
