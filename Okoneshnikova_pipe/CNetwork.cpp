@@ -75,9 +75,9 @@ bool CNetwork::is_cycled() const
             if (!it->second.is_marked && !it->second.is_passed)
             {
                 it->second.is_marked = true;
-                for (int U : GetAdjacent(it->second.VertexId))
+                for (int i : GetAdjacent(it->second.VertexId))
                 {
-                    map<int, Vertex>::iterator itC = workmap.find(U);
+                    map<int, Vertex>::iterator itC = workmap.find(i);
                     if (!itC->second.is_marked && !itC->second.is_passed)
                     {
                         stackvert.push(itC->second.VertexId);
@@ -294,7 +294,7 @@ ostream& operator<<(ostream& out, const CNetwork& N)
     return out;
 }
 
-std::istream& operator>>(std::istream& in, CNetwork& N)
+istream& operator>>(istream& in, CNetwork& N)
 {
     N.mapEdge.clear();
     N.mapVertex.clear();
@@ -314,7 +314,7 @@ std::istream& operator>>(std::istream& in, CNetwork& N)
         for (int j = 0; j < n; j++)
         {
             std::cout << "Enter an id of directed edge between vertexes "
-                << VecVertex[i] << " and " << VecVertex[j] << " (zero, if there is no edge): ";
+                << VecVertex[i] << " and " << VecVertex[j] << " (0, if no edge): ";
             int id = GetCorrectNumber(10000);
             if (id != 0)
             {
@@ -322,7 +322,7 @@ std::istream& operator>>(std::istream& in, CNetwork& N)
                 double w = GetCorrectNumber(1000.0);
                 cout << "Enter a capacity of this edge: ";
                 double c = GetCorrectNumber(1000.0);
-                cout << "Whether this edge is from first to second vertex? ([1] - yes, [0] - revers): ";
+                cout << "Is start from first vertex? Yes(1), No(0): ";
                 bool IsStraight = GetCorrectNumber(1);
                 N.Connect(VecVertex[i], VecVertex[j], id, w, c);
             }
