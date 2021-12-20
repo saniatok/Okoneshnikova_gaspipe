@@ -18,6 +18,10 @@ class CNetwork
 		bool is_passed;
 	};
 
+	
+
+public:
+
 	struct Edge
 	{
 		int StartVertexId;
@@ -29,12 +33,13 @@ class CNetwork
 
 	};
 
-public:
 	void Connect(int idVer1, int idVer2, int idEdge, double Weight=1.0, double Capacity=1.0, bool is_one_step=true);
 	bool HasEdge(int Id) const;
 	vector<int> TopologicalSort() const;
 	void DeleteVertex(int id);
 	void DeleteEdge(int id);
+	double MaxFlow(int SourceId, int TargetId) const;
+	double MinPath(int StartId, int EndId) const;
 	friend ostream& operator << (ostream& out, const CNetwork& N);
 	friend istream& operator >> (istream& in, CNetwork& N);
 	friend ifstream& operator >> (ifstream& fin, CNetwork& N);
@@ -48,5 +53,6 @@ private:
 	vector <int> GetAdjacent(int Id) const;
 	map <int, Vertex> mapVertex;
 	unordered_map <int, Edge> mapEdge;
+	vector<vector <int>>FindAllPaths(int IdStart, int IdEnd) const;
 	bool HasVertex(int Id) const;
 };

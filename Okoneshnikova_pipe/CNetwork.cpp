@@ -48,6 +48,64 @@ bool CNetwork::HasEdge(int Id) const
     }
 }
 
+vector<vector<int>> CNetwork::FindAllPaths(int IdStart, int IdEnd) const
+{
+    auto workmap = mapVertex;
+    vector<vector<int>> PVertex = { };
+    vector<int> curPath = { };
+    stack<int> stackvert;
+    stackvert.push(IdStart);
+    while (!stackvert.empty())
+    {
+        std::map<int, Vertex>::iterator it = workmap.find(stackvert.top());
+        if (!it->second.is_marked)
+        {
+            if (it->first != IdEnd)
+            {
+                curPath.push_back(it->first);
+                it->second.is_marked = true;
+                for (int id : GetAdjacent(it->second.VertexId))
+                {
+                    auto iter = workmap.find(id);
+                    if (!iter->second.is_marked)
+                    {
+                        stackvert.push(iter->first);
+                    }
+                }
+            }
+            else
+            {
+                curPath.push_back(IdEnd);
+                PVertex.push_back(curPath);
+                stackvert.pop();
+                curPath.pop_back();
+            }
+        }
+        else if (it->second.is_marked)
+        {
+            curPath.pop_back();
+            stackvert.pop();
+            it->second.is_marked = false;
+        }
+    }
+    vector<vector<int>> Paths = { };
+    for (unsigned int i = 0; i < PVertex.size(); i++)
+    {
+        Paths.push_back({ });
+        for (unsigned int j = 0; j < PVertex[i].size() - 1; j++)
+        {
+            for (const Edge& E : GetEjectors(PVertex[i][j]))
+            {
+                if (E.EndVertexId == PVertex[i][j + 1])
+                {
+                    Paths[i].push_back(E.EdgeId);
+                }
+            }
+        }
+    }
+    return Paths;
+}
+
 bool CNetwork::HasVertex(int Id) const
 {
     if (mapVertex.find(Id) != mapVertex.end())
@@ -149,6 +207,7 @@ vector<int> CNetwork::TopologicalSort() const
     }
     else
     {
+        cout << "Graph has cycle";
         return {};
     }
 }
@@ -188,6 +247,93 @@ void CNetwork::DeleteEdge(int id)
     else
     {
         cout<< endl<<"No Edge ";
+    }
+}
+
+double CNetwork::MaxFlow(int SourceId, int TargetId) const
+{
+    if (!is_cycled() && HasVertex(SourceId) && HasVertex(TargetId))
+    {
+        auto workmap = mapEdge;
+        double maxFlow = 0.0;
+        for (const std::vector<int>& vec : FindAllPaths(SourceId, TargetId))
+        {
+            double curFlow = 0.0;
+            double minCap = workmap[vec[0]].Capacity;
+            for (int id : vec) 
+            {
+                auto it = workmap.find(id);
+                if (it->second.Capacity < minCap)
+                {
+                    minCap = it->second.Capacity;
+                }
+            }
+            curFlow = minCap;
+            for (int id : vec)
+            {
+                auto it = workmap.find(id);
+                it->second.Capacity -= curFlow;
+            }
+            maxFlow += curFlow;
+        }
+        return maxFlow;
+    }
+    else
+    {
+        cout << "No calculation available ";
+        return 0.0;
+    }
+}
+
+double CNetwork::MinPath(int StartId, int EndId) const
+{
+    if (!is_cycled() && HasVertex(StartId) && HasVertex(EndId))
+    {
+        double minPath = 0.0;
+        std::vector<std::vector<int>> Paths = FindAllPaths(StartId, EndId);
+        std::vector<int> Paths_id;
+        if (!Paths.empty())
+        {
+            for (int id : Paths[0])
+            {
+                auto it = mapEdge.find(id);
+                minPath += it->second.Weight;
+            }
+            for (const auto& vec : Paths)
+            {
+                double curPath = 0.0;
+                for (int id : vec)
+                {
+                    auto it = mapEdge.find(id);
+                    curPath += it->second.Weight;
+                }
+                if (curPath < minPath)
+                {
+                    minPath = curPath;
+                    Paths_id = vec;
+                }
+            }
+        }
+        if (minPath >= INT_MAX)
+        {
+            cout << "infinity";
+            Paths_id.clear();
+            return 0.0;
+        }
+        else
+        {
+            for (int id : Paths_id)
+            {
+                std::cout << id << "  ";
+            }
+            std::cout << std::endl;
+            return minPath;
+        }
+    }
+    else
+    {
+        cout << "No minimal path available";
+        return 0.0;
     }
 }
 
