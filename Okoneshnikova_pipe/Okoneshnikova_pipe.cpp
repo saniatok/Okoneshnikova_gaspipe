@@ -93,7 +93,14 @@ void ErasePipe(unordered_map <int, Pipe>& map, CNetwork& net)
     if (map.find(id) != map.end())
     {
         map.erase(id);
-        net.DeleteEdge(id);
+        if (!net.HasEdge(id))
+        {
+            net.DeleteEdge(id);
+        }
+        else
+        {
+            cout << "Delete pipe from network first";
+        }
     }
     else
     {
@@ -109,6 +116,8 @@ void EraseCS(unordered_map <int, CompressionStation>& map, CNetwork& net)
     {
         map.erase(id);
         net.DeleteVertex(id);
+      
+
     }
     else
     {
