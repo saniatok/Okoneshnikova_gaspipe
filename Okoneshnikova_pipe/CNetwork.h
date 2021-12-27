@@ -5,6 +5,7 @@
 #include <stack>
 #include <iostream>
 #include <fstream>
+#include "CPipe.h"
 
 using namespace std;
 
@@ -33,12 +34,12 @@ public:
 
 	};
 
-	void Connect(int idVer1, int idVer2, int idEdge, double Weight=1.0, double Capacity=1.0, bool is_one_step=true);
+	void Connect(int idVer1, int idVer2, int idEdge, double Weight=1.0, int Capacity=1, bool is_one_step=true);
 	bool HasEdge(int Id) const;
 	vector<int> TopologicalSort() const;
 	void DeleteVertex(int id);
 	void DeleteEdge(int id);
-	double MaxFlow(int SourceId, int TargetId) const;
+	int MaxFlow(int SourceId, int TargetId) const;
 	double MinPath(int StartId, int EndId) const;
 	friend ostream& operator << (ostream& out, const CNetwork& N);
 	friend istream& operator >> (istream& in, CNetwork& N);
@@ -47,7 +48,7 @@ public:
 
 private:
 	CNetwork::Vertex AddVertex(int ownId);
-	CNetwork::Edge AddEdge(int startId, int ownId, int endId, double Weight, double Capacity, bool is_directed, bool StartToEnd);
+	CNetwork::Edge AddEdge(int startId, int ownId, int endId, double Weight, int Capacity, bool is_directed, bool StartToEnd);
 	bool is_cycled() const;
 	vector <CNetwork::Edge> GetEjectors(int Id) const;
 	vector <int> GetAdjacent(int Id) const;

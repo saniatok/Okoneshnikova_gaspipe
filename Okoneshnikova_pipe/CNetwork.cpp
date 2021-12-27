@@ -1,8 +1,7 @@
 #include "CNetwork.h"
 #include "utils.h"
 
-
-void CNetwork::Connect(int idVer1, int idVer2, int idEdge, double Weight, double Capacity, bool is_one_step)
+void CNetwork::Connect(int idVer1, int idVer2, int idEdge, double Weight, int Capacity, bool is_one_step)
 {
     bool Ver1Connect = HasVertex(idVer1);
     bool Ver2Connect = HasVertex(idVer2);
@@ -207,7 +206,7 @@ vector<int> CNetwork::TopologicalSort() const
     }
     else
     {
-        cout << "Graph has cycle";
+        cout << endl << "Graph has cycle";
         return {};
     }
 }
@@ -246,11 +245,11 @@ void CNetwork::DeleteEdge(int id)
     }
     else
     {
-        cout<< endl<<"No Edge ";
+        cout<< endl <<"No Edge ";
     }
 }
 
-double CNetwork::MaxFlow(int SourceId, int TargetId) const
+int CNetwork::MaxFlow(int SourceId, int TargetId) const
 {
     if (!is_cycled() && HasVertex(SourceId) && HasVertex(TargetId))
     {
@@ -280,8 +279,8 @@ double CNetwork::MaxFlow(int SourceId, int TargetId) const
     }
     else
     {
-        cout << "No calculation available ";
-        return 0.0;
+        cout << endl << "No calculation available ";
+        return 0;
     }
 }
 
@@ -316,7 +315,7 @@ double CNetwork::MinPath(int StartId, int EndId) const
         }
         if (minPath >= INT_MAX)
         {
-            cout << "infinity";
+            cout << endl << "infinity";
             Paths_id.clear();
             return 0.0;
         }
@@ -324,15 +323,15 @@ double CNetwork::MinPath(int StartId, int EndId) const
         {
             for (int id : Paths_id)
             {
-                std::cout << id << "  ";
+                cout << id << "  ";
             }
-            std::cout << std::endl;
+            cout << endl;
             return minPath;
         }
     }
     else
     {
-        cout << "No minimal path available";
+        cout << endl << "No minimal path available";
         return 0.0;
     }
 }
@@ -347,7 +346,7 @@ CNetwork::Vertex CNetwork::AddVertex(int ownId)
     return v;
 }
 
-CNetwork::Edge CNetwork::AddEdge(int startId, int ownId, int endId, double Weight, double Capacity, bool is_directed, bool StartToEnd)
+CNetwork::Edge CNetwork::AddEdge(int startId, int ownId, int endId, double Weight, int Capacity, bool is_directed, bool StartToEnd)
 {
     Edge e;
     e.StartVertexId = startId;
@@ -487,7 +486,8 @@ ifstream& operator>>(ifstream& fin, CNetwork& N)
     {
         int EdgeId = 0, StartVertexId = 0, EndVertexId = 0;
         bool is_directed = true;
-        double Weight = 0.0, Capacity = 0.0;
+        double Weight = 0.0;
+        int Capacity = 0;
         fin >> EdgeId;
         fin >> StartVertexId;
         fin >> EndVertexId;

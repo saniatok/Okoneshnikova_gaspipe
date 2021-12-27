@@ -18,8 +18,8 @@ public:
     int getDiam() const;
     double getLength() const;
     bool getRepair() const;
-    bool getPressure() const;
-    bool getPerformance() const;
+    double getPressure() const;
+    int getPerformance() const;
 
     Pipe();
     Pipe(ifstream& in);

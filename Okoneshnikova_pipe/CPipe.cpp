@@ -2,6 +2,7 @@
 #include <iostream>
 #include "utils.h"
 #include <fstream>
+#include "math.h"
 
 using namespace std;
 
@@ -33,6 +34,8 @@ ostream& operator << (ostream& out, const Pipe& p)
     {
         out << "This pipe in repair." << endl;
     }
+    out << p.getPerformance() << endl;
+    out << p.getPressure() << endl;
     out << endl;
     return out;
 }
@@ -86,14 +89,28 @@ bool Pipe::getRepair() const
     return in_repair;
 }
 
-bool Pipe::getPressure() const
+double Pipe::getPressure() const
 {
-    return length* 1.0/diam;
+    if (!in_repair)
+    {
+        return 8888;
+    }
+    else
+    {
+        return length;
+    }
 }
 
-bool Pipe::getPerformance() const
+int Pipe::getPerformance() const
 {
-    return diam* 1.0/length;
+    if (!in_repair)
+    {
+        return 0;
+    }
+    else
+    {
+        return (int)1000 * (sqrt(pow(diam, 5) / (length) / pow(1000, 5)));
+    }
 }
 
 

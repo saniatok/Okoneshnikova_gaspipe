@@ -99,7 +99,7 @@ void ErasePipe(unordered_map <int, Pipe>& map, CNetwork& net)
         }
         else
         {
-            cout << "Delete pipe from network first";
+            cout << endl << "Delete pipe from network first";
         }
     }
     else
@@ -116,8 +116,6 @@ void EraseCS(unordered_map <int, CompressionStation>& map, CNetwork& net)
     {
         map.erase(id);
         net.DeleteVertex(id);
-      
-
     }
     else
     {
@@ -172,11 +170,6 @@ void PrintTopologicalSort(unordered_map <int, CompressionStation>& compress, CNe
         {
             cout << i + 1 << "\t" << t_sort[i] << endl;
         }
-        /*cout << "Sorted sompression stations:" << endl;
-        for (int i : t_sort)
-        {
-            cout << compress[i];
-        }*/
     }
 }
 
@@ -507,12 +500,12 @@ int main()
                                 }
                                 else
                                 {
-                                    cout << "This pipe is in repair now, choose another pipe" << endl;
+                                    cout << endl << "This pipe is in repair now, choose another pipe" << endl;
                                 }
                             }
                             else
                             {
-                                cout << "No available pipes";
+                                cout << endl << "No available pipes";
                             }
                         }
                         break;
@@ -580,15 +573,15 @@ int main()
                     case 8:
                     {
                         int idS = 0, idT = 0;
-                        cout << endl << "Enter Source compression station id or 0 for exit";
+                        cout << endl << "Enter source compression station id or 0 for exit: ";
                         idS = GetCorrectNumber(findMaxID(compress));
                         if (idS != 0)
                         {
-                            cout << endl << "Enter Target compression station id or 0 for exit";
+                            cout << "Enter target compression station id or 0 for exit: ";
                             idT = GetCorrectNumber(findMaxID(compress));
                             if (idT != 0)
                             {
-                                cout << endl << "Maximum flow: " << net.MaxFlow(idS, idT);
+                                cout << endl << "Maximum flow: " << net.MaxFlow(idS, idT) << endl;
                             }
                         }
                         break;
@@ -596,7 +589,7 @@ int main()
                     case 9:
                     {
                         int idS = 0, idF = 0;
-                        cout << "Enter starting compression station id or 0 for exit: ";
+                        cout << endl << "Enter starting compression station id or 0 for exit: ";
                         idS = GetCorrectNumber(findMaxID(compress));
                         if (idS != 0)
                         {
@@ -605,13 +598,13 @@ int main()
                             if (idF != 0)
                             {
                                 double path = net.MinPath(idS, idF);
-                                if (path != 0)
+                                if (path != 0 || path!=8888)
                                 {
-                                    cout << endl << "Minimal path: " << path;
+                                    cout << endl << "Minimal path: "<< path << endl;
                                 }
                                 else
                                 {
-                                    cout << "No path" << endl;
+                                    cout << endl << "No path" << endl;
                                 }
                             }
                         }
