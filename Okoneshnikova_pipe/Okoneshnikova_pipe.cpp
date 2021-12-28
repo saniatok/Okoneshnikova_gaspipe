@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -64,14 +65,18 @@ bool Exist(size_t size)
     return true;
 };
 
-void EditPipe(unordered_map<int, Pipe>& g)
+void EditPipe(unordered_map<int, Pipe>& g, CNetwork& net)
 {
     cout << "Enter pipe's index: ";
     int id = GetCorrectNumber(findMaxID(g));
+    auto iter =net.mapEdge.find(id);
     unordered_map<int, Pipe>::iterator it = g.find(id);
     if (it != g.end())
     {
         it->second.Repair();
+        iter->second.Capacity = it->second.getPerformance();
+        iter->second.Weight = it->second.getPressure();
+
     }
 }
 
@@ -309,7 +314,8 @@ int main()
             cout << endl;
             if (Exist(pipeline.size()))
             {
-                EditPipe(pipeline);
+                EditPipe(pipeline, net);
+
             }
             break;
         }
@@ -581,6 +587,7 @@ int main()
                             idT = GetCorrectNumber(findMaxID(compress));
                             if (idT != 0)
                             {
+                                 
                                 cout << endl << "Maximum flow: " << net.MaxFlow(idS, idT) << endl;
                             }
                         }
@@ -598,7 +605,7 @@ int main()
                             if (idF != 0)
                             {
                                 double path = net.MinPath(idS, idF);
-                                if (path != 0 || path!=8888)
+                                if (path != 0 || path < INT_MAX)
                                 {
                                     cout << endl << "Minimal path: "<< path << endl;
                                 }

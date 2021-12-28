@@ -93,7 +93,7 @@ double Pipe::getPressure() const
 {
     if (!in_repair)
     {
-        return 8888;
+        return INT_MAX;
     }
     else
     {
@@ -117,4 +117,6 @@ int Pipe::getPerformance() const
 void Pipe::Repair()
 {
     in_repair = !in_repair;
+    /*getPerformance();
+    getPressure();*/
 }

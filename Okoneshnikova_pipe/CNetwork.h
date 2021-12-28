@@ -39,6 +39,7 @@ public:
 	vector<int> TopologicalSort() const;
 	void DeleteVertex(int id);
 	void DeleteEdge(int id);
+	unordered_map <int, Edge> mapEdge;
 	int MaxFlow(int SourceId, int TargetId) const;
 	double MinPath(int StartId, int EndId) const;
 	friend ostream& operator << (ostream& out, const CNetwork& N);
@@ -53,7 +54,7 @@ private:
 	vector <CNetwork::Edge> GetEjectors(int Id) const;
 	vector <int> GetAdjacent(int Id) const;
 	map <int, Vertex> mapVertex;
-	unordered_map <int, Edge> mapEdge;
+	/*unordered_map <int, Edge> mapEdge;*/
 	vector<vector <int>>FindAllPaths(int IdStart, int IdEnd) const;
 	bool HasVertex(int Id) const;
 };

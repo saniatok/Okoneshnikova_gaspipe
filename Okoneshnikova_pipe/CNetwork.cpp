@@ -286,6 +286,7 @@ int CNetwork::MaxFlow(int SourceId, int TargetId) const
 
 double CNetwork::MinPath(int StartId, int EndId) const
 {
+    unordered_map <int, Pipe> pipeline;
     if (!is_cycled() && HasVertex(StartId) && HasVertex(EndId))
     {
         double minPath = 0.0;
@@ -295,8 +296,10 @@ double CNetwork::MinPath(int StartId, int EndId) const
         {
             for (int id : Paths[0])
             {
+                
                 auto it = mapEdge.find(id);
-                minPath += it->second.Weight;
+               // minPath += it->second.Weight;
+                minPath += pipeline[id].getPressure();
             }
             for (const auto& vec : Paths)
             {
